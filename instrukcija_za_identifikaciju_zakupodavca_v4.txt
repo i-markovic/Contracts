@@ -1,0 +1,82 @@
+Iz dostavljenih tekstova utvrdi zakupodavce za svaki zaseban ugovor
+o zakupu ili podzakupu istog lokala.
+
+A. Izbor dokumenata i povezivanje aneksa
+
+Razlikuj ugovore i anekse od ostalih dokumenata za isti lokal, kao što
+su odluke o radnom vremenu. Svaki zaseban ugovor daje jedan zapis.
+Aneks dopunjava zapis svog ugovora. Novi ugovor daje poseban zapis
+i kada zamenjuje prethodni. Zapise poređaj po datumu zaključenja ugovora.
+
+Aneks poveži sa ugovorom koji menja prema broju ili datumu ugovora
+navedenom u tekstu, odnosno preko drugog aneksa čija je veza potvrđena.
+Proveri da se odnosi na isti predmet zakupa. Sama adresa lokala,
+blizina datuma ili sličnost naziva fajlova nisu dokaz veze.
+
+B. Merodavni zakupodavac za svaki ugovor
+
+Za svaki ugovor kreni od zakupodavca iz osnovnog teksta i prati samo
+njegove anekse po datumu zaključenja. Merodavno je stanje prema
+poslednjem aneksu tog ugovora. Ako aneks izričito menja zakupodavca,
+primeni tu promenu. Ako ga ne menja ili ne ponavlja, prenesi poslednje
+pouzdano utvrđeno stanje iz prethodnog aneksa ili ugovora. Ako ugovor
+nema aneksa, koristi stanje iz samog ugovora.
+
+Ranije zakupodavce navedene radi opisa istorije ugovora uključi samo
+ako i dalje imaju tu ulogu. Primalac zakupnine, vlasnik ili zastupnik
+ulazi u zapis samo ako mu je dodeljena i uloga zakupodavca. Ako nejasna
+veza ili redosled aneksa utiču na to ko je merodavan, odnosno ako
+identitet nije pouzdano utvrđen, za taj ugovor u polje zakupodavca upiši NA.
+
+C. Zapis za svaki ugovor
+
+Navedi broj i datum ugovora, broj i datum poslednjeg povezanog aneksa
+kada postoji, i merodavnog zakupodavca. Brojeve i datume preuzmi iz
+teksta dokumenta kada su utvrđeni. Ako ugovor ima više zakupodavaca,
+navedi ih zajedno u istom zapisu. Na identifikaciju i formatiranje
+zakupodavca u svakom zapisu primeni sledeća osnovna pravila.
+
+1. Počni od uvoda u kojem se definišu ugovorne strane. Utvrdi ko je u
+   konkretnom dokumentu označen kao zakupodavac. Kod podzakupa izdvoji
+   podzakupodavca. Ulogu utvrdi iz teksta, bez pretpostavki o tome ko
+   je zakupac ili kojim redom su strane navedene.
+
+2. Ako je uvod nejasan ili nepotpun, proveri potpisni blok i ostale
+   delove teksta u kojima je strana navedena kao zakupodavac. Razlikuj
+   zakupodavca iz konkretnog ugovora od vlasnika prostora, prethodnog
+   zakupodavca i strana iz drugih ugovora pomenutih u tekstu.
+
+3. Ako zakupodavca zastupa direktor, punomoćnik ili zakonski zastupnik,
+   izdvoji naziv firme ili ime osobe koju zastupa. Zastupnika uključi
+   samo ako je i sam naveden kao zakupodavac. Ako ih ima više, navedi
+   sve zakupodavce, svakog jednom, redom kojim su navedeni u dokumentu.
+
+4. Za firmu vrati naziv sa pravnom formom kada je navedena, npr. d.o.o.,
+   a.d., o.d., PR ili JP. Ako odmah posle oznake DOO ili D.O.O. sledi
+   naziv grada u Srbiji, uključi i grad u naziv, čak i kada je odvojen
+   zarezom ili crticom. Primer: „SPORTSKE NET DOO KRAGUJEVAC, sa
+   registrovanim sedištem...“ daje „Sportske Net d.o.o. Kragujevac“.
+   Grad preuzet samo iz zasebne adrese ili opisa sedišta ne dodaj.
+   Izostavi ulicu, kućni broj, PIB, matični broj, broj računa, kontakte
+   i podatke o zastupniku.
+
+5. Pri prepoznavanju uloga, imena, naziva firmi, pravnih formi i gradova
+   zanemari razlike u velikim i malim slovima. Uzmi u obzir i razlike
+   u pismu, dijakriticima, razmacima i interpunkciji koje ne menjaju
+   značenje. Rezultat vrati na srpskoj latinici, sa dijakriticima kada
+   su pouzdano utvrđeni. Strane reči u nazivu firme ne prevodi.
+
+6. Za fizičko lice vrati ime i prezime u nominativu, redom ime pa
+   prezime. Padež utvrdi iz cele rečenice pre promene redosleda reči.
+   Na primer, „između Lukić Dragana“ daje „Dragan Lukić“, a „između
+   Save Lantoš“ daje „Sava Lantoš“. Ako je oblik dvosmislen, potraži
+   potvrdu u potpisnom bloku ili drugom delu teksta. Sam završetak
+   reči nije dovoljan za utvrđivanje nominativa.
+
+7. Ako je ime ili naziv delimično nečitljiv, pokušaj da ga potvrdiš
+   na drugom mestu u tekstu. Ne dopunjavaj nečitljive delove nagađanjem.
+   Ako ne možeš pouzdano utvrditi sve zakupodavce, vrati samo NA.
+
+8. U polje za zakupodavca upiši samo utvrđeno ime ili naziv, odnosno
+   NA. Ako ih ima više, vrati ih u jednom redu, razdvojene zarezima i
+   veznikom „i“ pre poslednje stavke.

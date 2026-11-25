@@ -1,0 +1,58 @@
+Poređenje sa Excelom i izlaz
+
+1. Ulaz i obuhvat
+
+Obradi postojeće foldere u zadatom obuhvatu, sortirane po punom nazivu.
+Ako je dat raspon naziva foldera, uključi oba granična foldera.
+Z šifre preuzmi iz postojećih foldera i zadrži vodeće nule.
+
+Za identifikaciju zakupodavca koristi sadržaj .ocr.txt fajlova i primeni
+instrukciju v4. Klasifikuj dokumente prema sadržaju. Ugovor i njegov aneks
+pripadaju istom zapisu, dok novi ugovor daje zaseban zapis. Kada ima više
+OCR prepisa istog ugovora, evidentiraj ga jednom. Za svaki ugovor zabeleži
+Z šifru, broj i datum ugovora, broj i datum poslednjeg povezanog aneksa
+kada postoje i merodavnog zakupodavca. Zabeleži nejasnoće u evidenciji.
+Ako radiš samo novo poređenje, koristi već utvrđene zakupodavce.
+
+2. Poređenje
+
+Na listu contract-entries koristi kolonu G za Z šifru i kolonu E za
+zakupodavca. Za svaki identifikovani ugovor proveri neprazne vrednosti iz
+E za njegovu Z šifru. Sve ugovore sa istom Z šifrom proveri pojedinačno.
+
+Prvo traži poklapanje nakon normalizacije. Zanemari razlike u velikim i
+malim slovima, suvišnim razmacima, interpunkciji koja ne menja naziv,
+srpskim dijakriticima i razlike između ćirilice i latinice. Prihvati
+obrnut redosled imena i prezimena i padežni oblik kada jasno označavaju
+isto lice. Slovne greške poput Company i Compani ostaju razlike.
+
+Ako nema poklapanja nakon normalizacije, primeni pravilo podskupa.
+Excel vrednost može sadržati skraćen naziv firme ili samo neke od
+zakupodavaca utvrđenih za taj ugovor. Dodatni ili drugačiji naziv odnosno
+ime u Excel vrednosti znači da ta vrednost ne prolazi.
+
+U svakoj fazi prekini pretragu po prvom poklapanju. Kada ugovor ima
+poklapanje, pređi na sledeći ugovor i izostavi ga iz fajla sa razlikama.
+Poklapanje je rezultat poređenja imena po Z šifri. Veza Excel reda sa
+pojedinačnim ugovorom zahteva zaseban dokaz.
+
+3. Izlaz i statistika
+
+Sačuvaj evidenciju sa jednim zapisom po ugovoru. Sortiraj po punom nazivu
+foldera, a u istom folderu po datumu zaključenja ugovora.
+
+Sačuvaj fajl sa razlikama kao UTF-8 TXT bez zaglavlja. Format jednog reda:
+
+Z | excel vrednost | tvoja vrednost
+
+Ako za ugovor nijedna Excel vrednost ne prolazi, upiši po jedan red za
+svaku različitu nepraznu Excel vrednost za njegovu Z šifru. Ako Z šifra
+nema nepraznu vrednost iz kolone E, ostavi srednje polje prazno. U izlazu
+koristi izvorne Excel vrednosti i nazive iz evidencije. Prelom reda
+unutar Excel ćelije zapiši kao \n da svaki zapis zauzme jedan red.
+
+Ugovor sa zakupodavcem NA izostavi iz poređenja i broji ga posebno.
+Prikaži broj obrađenih foldera i ugovora, broj poklapanja nakon
+normalizacije, broj poklapanja samo po podskupu, broj nepoklapanja, broj
+ugovora bez Excel vrednosti i broj NA. Posebno prikaži broj redova u
+fajlu sa razlikama.
