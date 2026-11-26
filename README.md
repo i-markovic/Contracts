@@ -14,7 +14,7 @@ potvrđenog stanja kada aneks ne menja zakupodavca.
 1. [Identifikacija zakupodavca, verzija 4](instrukcija_za_identifikaciju_zakupodavca_v4.txt) određuje vrstu dokumenta, vezu aneksa sa ugovorom i način zapisivanja imena.
 2. [Poređenje zakupodavaca sa Excelom i izlaz](instrukcija_za_poredjenje_sa_excelom.txt) određuje redosled provere, pravilo podskupa i format izveštaja.
 
-3. [Obrada adresa imovine, verzija 2](instrukcija_za_obradu_adresa_imovine_v2.txt) je važeća instrukcija za izdvajanje adrese i njeno poređenje sa kolonom H. [Opšta instrukcija za izdvajanje adrese](instrukcija_za_izdvajanje_adrese_imovine_v1.txt) opisuje čitanje OCR dokumenata.
+3. [Obrada adresa imovine](instrukcija_za_obradu_adresa_imovine.txt) opisuje izdvajanje adrese iz OCR dokumenata i poređenje sa kolonom H u Excelu.
 
 Rezultat obrade čine TSV evidencija ugovora i UTF-8 TXT sa razlikama.
 Poređenje koristi Z šifru kao ključ za izbor Excel vrednosti. Status se
