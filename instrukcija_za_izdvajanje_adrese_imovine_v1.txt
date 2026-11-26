@@ -28,10 +28,6 @@ Ako su zaista izdata dva prostora ili prostor ima dve potvrđene adrese, sačuva
 
 Ako je adresa delimična, vrati potvrđene elemente i u napomeni navedi šta nedostaje. Izostavljen broj ne upisuj kao „bb”. Nečitljiv deo pokušaj da potvrdiš na drugom mestu u istom ugovoru ili u njegovom aneksu. Ako ugovor i dalje daje međusobno nespojive adrese istog prostora, a merodavna verzija se ne može utvrditi, upiši NA i u napomeni sačuvaj obe varijante i mesto neslaganja. Upiši NA i kada se adresa imovine uopšte ne može utvrditi.
 
-6. Zapis i naknadna provera
+6. Zapis nalaza
 
 Za svaki ugovor zabeleži Z šifru sa vodećim nulama, broj i datum ugovora kada su utvrđeni, izdvojenu adresu, relevantne OCR fajlove i napomenu za nejasnoće. Kada aneks menja adresu, zabeleži koji je aneks izvršio promenu. Unutar foldera poređaj zapise po datumu zaključenja ugovora.
-
-Ako se traži provera prema Excelu, koristi list contract-entries, kolonu G za izbor iste Z šifre i H za adresu. Za svaki ugovor proveri sve dostupne H vrednosti do prvog potpunog poklapanja. Poklapanje potvrđuje da se adresa pojavljuje pod tom šifrom; za povezivanje sa konkretnim Excel redom potreban je dodatni podatak o ugovoru.
-
-Samo za poređenje ujednači pismo, velika i mala slova, dijakritike, razmake, interpunkciju i nedvosmislene skraćenice koje ne menjaju adresu. Zadrži razlike koje identifikuju drugi broj ili lokal. Kada u jednom zapisu nedostaje mesto, kućni broj ili oznaka jedinice potrebna za identifikaciju, označi rezultat kao nepotpun. U izveštaju sačuvaj izvornu Excel vrednost i zasebno adresu izdvojenu iz dokumenta.
