@@ -75,3 +75,6 @@ C. Prepoznavanje i oblik imena
 8. U polje za zakupodavca upiši samo utvrđeno ime ili naziv, odnosno
    NA. Ako ih ima više, vrati ih u jednom redu, razdvojene zarezima i
    veznikom „i“ pre poslednje stavke.
+
+
+Po završetku detekcije primeni instrukcija_za_izvoz_polja_u_json.txt iz istog direktorijuma. Za ovo polje upiši "Zakupodavac" u ključ field i sačuvaj rezultat u fajlu zakupodavac.json.

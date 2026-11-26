@@ -8,7 +8,19 @@ Sačuvaj evidenciju u TSV formatu sa jednim zapisom po ugovoru. Navedi Z šifru,
 
 Tek posle izdvajanja proveri sve neprazne vrednosti kolone C (External contract no.) na listu contract-entries za istu Z šifru u G. Zadrži vodeće nule. Poredi ceo niz grupa cifara. Zanemari pismo, dijakritike, razmak, oznake „br.”, „broj”, „IN” i tip razdelnika između grupa. Razmak između jasno odvojenih delova broja može zameniti crtu. Za sve delove osim godine zahtevaj isti redosled i identične cifre, uključujući vodeće nule. U delu koji označava godinu prihvati četvorocifreni i odgovarajući dvocifreni oblik. Tako 007/19 prolazi prema 007-2019, dok 7/19 prema 007/2019 ostaje razlika. U izlazu zadrži godinu kako je pročitana, a dopisanu godinu prikaži sa dve cifre.
 
-Iz Excel vrednosti izdvoj broj ugovora i zanemari slobodan opis, datum, tehničke šifre kopije ili korekcije i broj aneksa. Ako ćelija izričito navodi brojeve dva osnovna ugovora, svaki može potvrditi odgovarajući nalaz. Broj iz opisa ne prihvataj samo zato što se njegove cifre poklapaju. Dovoljno je jedno poklapanje za Z šifru. Ono samo po sebi ne povezuje ugovor sa određenim Excel redom.
+Iz Excel vrednosti izdvoj broj ugovora i zanemari slobodan opis, datum, tehničke šifre kopije ili korekcije i broj aneksa. Ako ćelija izričito navodi brojeve dva osnovna ugovora, oba su kandidati. Brojeve iz opisa prihvati samo ako su označeni kao brojevi osnovnih ugovora.
 
-3. Izlaz
-Sačuvaj UTF-8 TXT bez zaglavlja u formatu „Z | originalna Excel vrednost | broj ugovora iz OCR-a”. Kada za ugovor nema poklapanja, prikaži po jedan red za svaku različitu raspoloživu Excel vrednost sa brojem ugovora. Izostavi prazna polja i oznake nedostajuće vrednosti. Ugovore sa nalazom NA i ugovore bez upotrebljivog Excel broja evidentiraj odvojeno od nepoklapanja. Svaki ugovor ima jedan ishod; najpre izdvoji NA. Sortiraj po punom nazivu foldera pa datumu zaključenja kada je utvrđen. Statistiku navedi po ugovorima, uz broj foldera, redova razlika i procenat poklapanja među uporedivim ugovorima.
+Za svaku Z šifru utvrdi sva moguća poklapanja pre izrade izveštaja. Excel red prati po broju reda na listu. Za svaki ugovor dovoljna je jedna potvrda, a isti Excel red može potvrditi najviše jedan ugovor. Kada postoji više mogućih raspodela, izaberi onu koja potvrđuje najviše zasebnih ugovora. U evidenciji zabeleži korišćeni red. Kada više raspodela daje isti rezultat, sama podudarnost broja nije dokaz jedinstvene veze.
+
+3. Redosled pripreme fajla sa razlikama
+
+1. Izdvoji ugovore sa očitanim brojem za koje nije pronađeno poklapanje. Za njih razmatraj preostale Excel redove iste Z šifre. Izostavi iskorišćene redove i dodatne redove koji potvrđuju već poklopljen ugovor, uključujući kopije i korekcije.
+2. Samo za preostale redove razlika proveri godinu broja osnovnog ugovora iz C prema godini datuma početka iz Q (Commencement date). Izostavi red ako je neslaganje godina utvrđeno. Za broj bez prepoznatljive godine ili nečitljiv datum u Q zadrži red. Ako C navodi više osnovnih ugovora, izostavi red samo kada se sve njihove godine pouzdano razlikuju od Q. Datum iz opisa i broj aneksa nisu godina broja osnovnog ugovora. Ovaj korak se primenjuje posle dodele poklapanja.
+3. Ako su za ugovor svi preostali Excel kandidati isključeni zbog C–Q, evidentiraj ga kao „Izuzet po C–Q” i izostavi iz razlika i obračuna stope poklapanja.
+4. Izostavi iz TXT i ugovore sa praznim Excel poljem. Vodi ih posebno kao „Bez preostalog Excel broja”, uključujući slučaj kada za šifru nije bilo upotrebljivih vrednosti u C.
+
+4. Izlaz i statistika
+
+Za svaki preostali nepoklopljeni ugovor sačuvaj po jedan red za svaku različitu originalnu Excel vrednost koja je prošla filtre. Ako se ista vrednost javlja u više Excel redova, prvo proveri Q svakog reda zasebno. Sačuvaj UTF-8 TXT bez zaglavlja u formatu „Z | originalna Excel vrednost | broj ugovora iz OCR-a”. Sortiraj po punom nazivu foldera, zatim po datumu zaključenja kada je utvrđen.
+
+Evidentiraj jedan ishod po ugovoru. Posebno prikaži poklapanja, preostala nepoklapanja, izuzete po C–Q, ugovore bez preostalog Excel broja i NA. Procenat poklapanja računaj među poklopljenim ugovorima i ugovorima koji imaju red u završnom TXT fajlu. Navedi broj obrađenih foldera, broj ugovora i broj redova u fajlu razlika.

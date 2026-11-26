@@ -1,0 +1,38 @@
+Identifikacija početka zakupa ili podzakupa
+
+1. Pitanje i jedinica obrade
+
+Za svaki zaseban osnovni ugovor odgovori na pitanje „Koji je prvi kalendarski dan perioda zakupa ili podzakupa prema tom osnovnom ugovoru?” U value upiši jedan potpun datum u obliku DD.MM.GGGG (npr. 01.04.2024) ili tekst "NA".
+
+Pregledaj sve .ocr.txt fajlove u svakom folderu sa zajedničkog spiska i njegovim podfolderima. Evidentiraj i pregledane foldere bez ugovora. Prema sadržaju razlikuj osnovne ugovore, njihove prepise, anekse i druge dokumente. Više prepisa istog ugovora objedini na osnovu strana, predmeta i broja ili datuma. Novi osnovni ugovor evidentiraj zasebno i kada se odnosi na isti prostor ili počinje istog dana. Radi nezavisno od Excela i rezultata drugih agenata.
+
+2. Kako pronaći merodavnu odredbu
+
+Pročitaj članove o trajanju, periodu zakupa i predaji prostora, zatim preambulu i završne odredbe. Traži izraze poput „period zakupa počinje”, „daje se u podzakup počev od”, „zakup traje od ... do ...” i „rok zakupa teče od”. Pročitaj celu rečenicu i član na koji se poziva. Utvrdi šta tačno počinje tog dana. Kod podzakupa proveri da se odredba odnosi na period konkretnog podzakupa. U preambuli može biti naveden i datum početka zakupa između vlasnika i podzakupodavca.
+
+Merodavna je odredba osnovnog ugovora koja određuje početak perioda zakupa. Kada ugovor trajanje određuje rasponom, uzmi prvi datum raspona. Ako početak vezuje za događaj (npr. potpisivanje ili primopredaju), utvrdi koji događaj pokreće zakup. Datum realizacije potvrdi iz osnovnog ugovora ili pouzdano povezanog dokumenta, kao što je zapisnik o primopredaji. Ako odredba određuje pomak od događaja, primeni ga samo ako je iz teksta moguć jedan tačan kalendarski rezultat. Sačuvaj osnov računanja. Planirani rok za događaj nije potvrda da se događaj tada odigrao.
+
+Datum zaključenja, stupanja ugovora na snagu, početka plaćanja zakupnine, isteka besplatnog perioda, overe, pečata, otvaranja lokala ili predaje ključeva može imati drugo značenje. Prihvati takav datum samo ako odredba vezuje početak perioda zakupa za njega. Ako ugovor navodi samo datum stupanja na snagu i ne određuje od kada teče zakup, upiši "NA".
+
+3. Početak uslovljen licencom
+
+Ako budući početak zavisi od dobijanja dozvole za priređivanje igara na sreću, upiši datum koji je prema raspoloživim dokumentima najverovatniji. U evidenciji ga označi kao „Procena” i zabeleži izvor, datum preseka i razlog procene. Kada je stvarni početak potvrđen, upiši taj datum i označi nalaz kao „Potvrđeno”. Za prošli zakup potraži dokaz o realizaciji u povezanim dokumentima. Ako nema dovoljno dokaza za stvarni datum ili opravdanu procenu budućeg datuma, upiši NA.
+
+4. Povezivanje dokumenata i nejasni nalazi
+
+Aneks poveži prema pozivanju na broj ili datum osnovnog ugovora i proveri strane i predmet. Prihvati i nedvosmislenu vezu preko već povezanog aneksa. Sama Z šifra ili adresa nije dovoljna. Aneks može potvrditi identitet ugovora i datum realizacije događaja za koji osnovni ugovor vezuje početak zakupa. Kasnije produženje ili novi period ne menja prvi dan prvobitnog zakupa.
+
+Ako vidiš dva datuma, uz svaki zabeleži događaj koji opisuje. Prednost ima datum koji određuje prvi dan perioda zakupa. Ako dve odredbe određuju različite datume za taj isti početak, proveri ceo osnovni ugovor i drugi potvrđeni OCR prepis istog ugovora. Prihvati jedan datum samo ako tekst razrešava neslaganje. Ako je utvrđen samo mesec ili godina, dan je nečitljiv, datum je kalendarski nemoguć, ostaju dva nespojiva početka ili nedostaje osnovni tekst koji potvrđuje datum, upiši "NA". U napomeni sačuvaj potvrđeni deo, moguće datume, relevantne odredbe i razlog. Naziv fajla, naziv foldera i registarski datum ne koriste se za popunjavanje.
+
+5. Primeri
+
+Potvrđen nalaz. „Ugovor stupa na snagu 15.03.2024. Period zakupa počinje 01.04.2024. Zakupnina se obračunava od 01.05.2024.” Vrednost je "01.04.2024".
+Granični primer. „Period podzakupa počinje danom primopredaje. Primopredaja će biti izvršena najkasnije 01.04.2024.” Ako ni osnovni ugovor ni pouzdano povezani dokument ne potvrđuju kada je primopredaja izvršena, vrednost je "NA". U napomeni navedi da je 1. april krajnji rok.
+
+6. Evidencija i predaja
+
+Za svaki ugovor zabeleži case_id, puni naziv foldera, Z šifru sa vodećim nulama, datum zaključenja ako je utvrđen, relativnu putanju do osnovnog OCR-a, član ili stranu kada su dostupni, kratak doslovan navod, izdvojenu vrednost, status procene i napomenu. Kada osnovni OCR nedostaje, navedi izvor koji potvrđuje identitet ugovora.
+
+Primeni instrukcija_za_izvoz_polja_u_json.txt iz repozitorijuma. Preuzmi postojeći tekstualni case_id iz C:\Kontroling\IFRS\ugovori\registar_osnovnih_ugovora.csv prema cost_center i path_to_file. Za praznu putanju primeni proveru iz instrukcije za izvoz. Dvosmislenu vezu sa registrom prijavi pre konačnog izvoza.
+
+Tačna vrednost ključa field je "pocetak zakupa". Fajl je datum_pocetka_zakupa.json. Sačuvaj UTF-8 JSON niz redosledom registra, sa po jednim objektom za svaki case_id u obuhvatu, uključujući "NA". Svaki objekat ima samo tekstualne ključeve case_id, field i value sa tekstualnim vrednostima. Za ovu obradu koristi njen izlazni direktorijum za JSON, prema zadatom obuhvatu. Ponovnim učitavanjem proveri skup i jedinstvenost case_id, ključeve, field i format vrednosti. Završi i sačuvaj izdvajanje pre otvaranja Excela.

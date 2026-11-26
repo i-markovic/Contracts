@@ -1,0 +1,31 @@
+Validacija početka zakupa ili podzakupa
+
+1. Ulaz i izbor kandidata
+
+Validiraj već sačuvane nalaze iz datum_pocetka_zakupa.json. Koristi radnu svesku C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx, list contract-entries. U koloni G traži tačnu Z šifru ugovora kao tekst sa vodećim nulama. Ukloni samo okolne razmake. Za svaki ugovor uzmi sve redove iste šifre i očitaj kolonu Q (Commencement date). Sačuvaj brojeve redova i izvorne prikazane vrednosti. Excel validacija ne menja value u JSON-u.
+
+2. Poređenje datuma
+
+Poredi dan, mesec i godinu. Excel datumsku ćeliju protumači prema sistemu datuma te radne sveske. Za naslovnu kolonu datuma vreme u datumsko-vremenskoj vrednosti zanemari bez pomeranja dana ili konverzije vremenske zone. Kod teksta prihvati jednoznačan pun datum, uključujući domaći zapis dan.mesec.godina, naziv meseca i ISO zapis godina-mesec-dan. Izjednači vodeće nule, razmake, završnu tačku i razdelnike kada je redosled komponenti jasan. Primeri „1.4.2024.”, „1. april 2024.” i „2024-04-01” predstavljaju isti dan. Dvosmislen brojčani tekst, npr. „04/05/2024” bez poznatog redosleda, ne tumači nagađanjem. Sam mesec, sama godina, nevažeći datum i greška formule nisu upotrebljivi datumi. Prazna ćelija, sami razmaci ili prazan rezultat formule znače da vrednost nedostaje.
+
+Samo jednak kalendarski datum daje poklapanje. Razlika od jednog dana, drugog meseca ili godine menja ishod. Nema tolerancije, podskupa, izbora najbližeg datuma ni filtriranja prema godini broja ugovora.
+
+3. Više ugovora ili redova za jednu Z šifru
+
+Za svaki case_id proveri da li se izdvojeni datum javlja među upotrebljivim Q vrednostima njegove Z šifre. Jedan jednak datum dovoljan je za poklapanje. Red se može uzeti u obzir kod više ugovora jer više ugovora može početi istog dana. Ovo potvrđuje prisustvo datuma za Z šifru. U evidenciji označi ako više ugovora deli isti odgovarajući red ili ako postoji više odgovarajućih redova. Sama podudarnost datuma ne identifikuje ugovor u tom redu. Ostale datume iste šifre sačuvaj u evidenciji kandidata.
+
+4. Ishodi i izlaz
+
+Dodeli svakom ugovoru tačno jedan ishod, sledećim redom:
+1) NA — izdvojena vrednost je "NA", bez obzira na Excel.
+2) Bez Excel vrednosti — za utvrđeni datum nema reda sa tom Z šifrom ili su sve Q vrednosti prazne.
+3) Neupotrebljiva Excel vrednost — postoji neprazna Q vrednost, ali nijedna se ne može protumačiti kao pun, jednoznačan datum.
+4) Poklapanje — bar jedan upotrebljiv Q datum jednak je nalazu.
+5) Nepoklapanje — postoji bar jedan upotrebljiv Q datum, a nijedan nije jednak nalazu. Ako postoje i neupotrebljive ćelije, navedi ih u napomeni uz njihove redove.
+
+U izlaznom direktorijumu ovog polja sačuvaj evidencija_datum_pocetka_zakupa.tsv. Uključi po jedan zapis za svaki case_id, sve podatke iz evidencije detekcije, brojeve Excel redova, originalne Q vrednosti i njihova tumačenja, redove sa poklapanjem, ishod i razlog nejasnoće. Sortiraj po punom nazivu foldera, zatim po datumu zaključenja i po case_id za isti ili nepoznat datum.
+
+U istom direktorijumu sačuvaj nepoklapanja_datum_pocetka_zakupa.txt kao UTF-8 bez zaglavlja, istim redosledom kao TSV. Samo za ishod „Nepoklapanje” upiši po jedan red za svaku različitu izvornu prikazanu Q vrednost koja daje upotrebljiv datum za tu šifru. Format reda je „Z | originalna Excel vrednost | izdvojeni datum”. Unutar jednog ugovora izostavi ponovljenu istu izvornu vrednost. Redove različitih ugovora sačuvaj i kada izgledaju isto. Prelom reda unutar ćelije zapiši kao doslovno \n. Ostale ishode prikaži samo u TSV-u i statistici. Kada nema nepoklapanja, TXT je prazan.
+
+Prikaži broj pregledanih foldera, ukupan broj ugovora, broj ugovora za svaki od pet ishoda i zasebno broj redova u TXT-u. Zbir pet ishoda mora biti jednak broju ugovora. Procenat poklapanja je 100 × broj ugovora sa ishodom „Poklapanje” / (broj ugovora sa ishodom „Poklapanje” + broj ugovora sa ishodom „Nepoklapanje”). Uz procenat navedi brojilac i imenilac. Kada je imenilac nula, prikaži „nema uporedivih ugovora”.
+U statistici prikaži broj procenjenih datuma i njihove ishode. U TSV prenesi status procene, datum preseka i osnov procene. Poklapanje procene sa Q ne potvrđuje da je zakup počeo tog dana.

@@ -27,3 +27,6 @@ Ako su zaista izdata dva prostora ili prostor ima dve potvrđene adrese, sačuva
 5. Nepotpun ili protivrečan nalaz
 
 Ako je adresa delimična, vrati potvrđene elemente i u napomeni navedi šta nedostaje. Izostavljen broj ne upisuj kao „bb”. Nečitljiv deo pokušaj da potvrdiš na drugom mestu u istom ugovoru ili u njegovom aneksu. Ako ugovor i dalje daje međusobno nespojive adrese istog prostora, a merodavna verzija se ne može utvrditi, upiši NA i u napomeni sačuvaj obe varijante i mesto neslaganja. Upiši NA i kada se adresa imovine uopšte ne može utvrditi.
+
+
+Po završetku detekcije primeni instrukcija_za_izvoz_polja_u_json.txt iz istog direktorijuma. Za ovo polje upiši "Adresa imovine" u ključ field i sačuvaj rezultat u fajlu adresa_imovine.json.
