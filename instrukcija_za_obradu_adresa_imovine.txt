@@ -29,4 +29,7 @@ Ako su zaista izdata dva prostora ili prostor ima dve potvrđene adrese, sačuva
 Ako je adresa delimična, vrati potvrđene elemente i u napomeni navedi šta nedostaje. Izostavljen broj ne upisuj kao „bb”. Nečitljiv deo pokušaj da potvrdiš na drugom mestu u istom ugovoru ili u njegovom aneksu. Ako ugovor i dalje daje međusobno nespojive adrese istog prostora, a merodavna verzija se ne može utvrditi, upiši NA i u napomeni sačuvaj obe varijante i mesto neslaganja. Upiši NA i kada se adresa imovine uopšte ne može utvrditi.
 
 
-Po završetku detekcije primeni instrukcija_za_izvoz_polja_u_json.txt iz istog direktorijuma. Za ovo polje upiši "Adresa imovine" u ključ field i sačuvaj rezultat u fajlu adresa_imovine.json.
+
+Predaja nalaza
+
+Sačuvaj nalazi_adrese_imovine.tsv kao UTF-8 TSV sa zaglavljem, pre otvaranja referentnog Excela. Koristi jedan red po osnovnom ugovoru, uključujući NA. Kolone obuhvataju case_id iz registra kada je veza potvrđena, Z šifru sa vodećim nulama, identitet ugovora i OCR izvor, izdvojenu vrednost u koloni nalaz i dokaz ili napomenu. Sačuvaj i dodatne podatke tražene iznad. Ako se case_id ne može pouzdano povezati, zabeleži razlog i jednoznačan OCR identifikator u evidenciji. Polja koja sadrže tabulator, navodnike ili prelom reda zapiši prema pravilima citiranja TSV polja. Proveri obuhvat i duplikate ponovnim čitanjem TSV-a.

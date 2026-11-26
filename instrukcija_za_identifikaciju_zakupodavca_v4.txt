@@ -77,4 +77,7 @@ C. Prepoznavanje i oblik imena
    veznikom „i“ pre poslednje stavke.
 
 
-Po završetku detekcije primeni instrukcija_za_izvoz_polja_u_json.txt iz istog direktorijuma. Za ovo polje upiši "Zakupodavac" u ključ field i sačuvaj rezultat u fajlu zakupodavac.json.
+
+Predaja nalaza
+
+Sačuvaj nalazi_zakupodavca.tsv kao UTF-8 TSV sa zaglavljem, pre otvaranja referentnog Excela. Koristi jedan red po osnovnom ugovoru, uključujući NA. Kolone obuhvataju case_id iz registra kada je veza potvrđena, Z šifru sa vodećim nulama, identitet ugovora i OCR izvor, izdvojenu vrednost u koloni nalaz i dokaz ili napomenu. Sačuvaj i dodatne podatke tražene iznad. Ako se case_id ne može pouzdano povezati, zabeleži razlog i jednoznačan OCR identifikator u evidenciji. Polja koja sadrže tabulator, navodnike ili prelom reda zapiši prema pravilima citiranja TSV polja. Proveri obuhvat i duplikate ponovnim čitanjem TSV-a.

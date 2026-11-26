@@ -1,0 +1,5 @@
+Izvoz polja kategorija imovine u JSON
+
+Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+
+Ulaz je nalazi_kategorije_imovine.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "kategorija imovine". Izlazni fajl nazovi kategorija_imovine.json.

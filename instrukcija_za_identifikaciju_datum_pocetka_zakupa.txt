@@ -2,7 +2,7 @@ Identifikacija početka zakupa ili podzakupa
 
 1. Pitanje i jedinica obrade
 
-Za svaki zaseban osnovni ugovor odgovori na pitanje „Koji je prvi kalendarski dan perioda zakupa ili podzakupa prema tom osnovnom ugovoru?” U value upiši jedan potpun datum u obliku DD.MM.GGGG (npr. 01.04.2024) ili tekst "NA".
+Za svaki zaseban osnovni ugovor odgovori na pitanje „Koji je prvi kalendarski dan perioda zakupa ili podzakupa prema tom osnovnom ugovoru?” U kolonu nalaz upiši jedan potpun datum u obliku DD.MM.GGGG (npr. 01.04.2024) ili tekst "NA".
 
 Pregledaj sve .ocr.txt fajlove u svakom folderu sa zajedničkog spiska i njegovim podfolderima. Evidentiraj i pregledane foldere bez ugovora. Prema sadržaju razlikuj osnovne ugovore, njihove prepise, anekse i druge dokumente. Više prepisa istog ugovora objedini na osnovu strana, predmeta i broja ili datuma. Novi osnovni ugovor evidentiraj zasebno i kada se odnosi na isti prostor ili počinje istog dana. Radi nezavisno od Excela i rezultata drugih agenata.
 
@@ -33,6 +33,7 @@ Granični primer. „Period podzakupa počinje danom primopredaje. Primopredaja 
 
 Za svaki ugovor zabeleži case_id, puni naziv foldera, Z šifru sa vodećim nulama, datum zaključenja ako je utvrđen, relativnu putanju do osnovnog OCR-a, član ili stranu kada su dostupni, kratak doslovan navod, izdvojenu vrednost, status procene i napomenu. Kada osnovni OCR nedostaje, navedi izvor koji potvrđuje identitet ugovora.
 
-Primeni instrukcija_za_izvoz_polja_u_json.txt iz repozitorijuma. Preuzmi postojeći tekstualni case_id iz C:\Kontroling\IFRS\ugovori\registar_osnovnih_ugovora.csv prema cost_center i path_to_file. Za praznu putanju primeni proveru iz instrukcije za izvoz. Dvosmislenu vezu sa registrom prijavi pre konačnog izvoza.
 
-Tačna vrednost ključa field je "pocetak zakupa". Fajl je datum_pocetka_zakupa.json. Sačuvaj UTF-8 JSON niz redosledom registra, sa po jednim objektom za svaki case_id u obuhvatu, uključujući "NA". Svaki objekat ima samo tekstualne ključeve case_id, field i value sa tekstualnim vrednostima. Za ovu obradu koristi njen izlazni direktorijum za JSON, prema zadatom obuhvatu. Ponovnim učitavanjem proveri skup i jedinstvenost case_id, ključeve, field i format vrednosti. Završi i sačuvaj izdvajanje pre otvaranja Excela.
+Predaja nalaza
+
+Sačuvaj nalazi_datum_pocetka_zakupa.tsv kao UTF-8 TSV sa zaglavljem, pre otvaranja referentnog Excela. Koristi jedan red po osnovnom ugovoru, uključujući NA. Kolone obuhvataju case_id iz registra kada je veza potvrđena, Z šifru sa vodećim nulama, identitet ugovora i OCR izvor, izdvojenu vrednost u koloni nalaz i dokaz ili napomenu. Sačuvaj i dodatne podatke tražene iznad. Ako se case_id ne može pouzdano povezati, zabeleži razlog i jednoznačan OCR identifikator u evidenciji. Polja koja sadrže tabulator, navodnike ili prelom reda zapiši prema pravilima citiranja TSV polja. Proveri obuhvat i duplikate ponovnim čitanjem TSV-a.

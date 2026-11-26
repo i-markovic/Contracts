@@ -1,8 +1,10 @@
 Validacija početka zakupa ili podzakupa
 
+Ulaz za verifikaciju je nalazi_datum_pocetka_zakupa.tsv, sačuvan posle identifikacije. Koristi nalaz i Z šifru iz tog TSV-a. Sačuvaj dopunjenu evidenciju kao UTF-8 evidencija_datum_pocetka_zakupa.tsv, uz poređenja i ishode.
+
 1. Ulaz i izbor kandidata
 
-Validiraj već sačuvane nalaze iz datum_pocetka_zakupa.json. Koristi radnu svesku C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx, list contract-entries. U koloni G traži tačnu Z šifru ugovora kao tekst sa vodećim nulama. Ukloni samo okolne razmake. Za svaki ugovor uzmi sve redove iste šifre i očitaj kolonu Q (Commencement date). Sačuvaj brojeve redova i izvorne prikazane vrednosti. Excel validacija ne menja value u JSON-u.
+Validiraj već sačuvane nalaze iz nalazi_datum_pocetka_zakupa.tsv. Koristi radnu svesku C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx, list contract-entries. U koloni G traži tačnu Z šifru ugovora kao tekst sa vodećim nulama. Ukloni samo okolne razmake. Za svaki ugovor uzmi sve redove iste šifre i očitaj kolonu Q (Commencement date). Sačuvaj brojeve redova i izvorne prikazane vrednosti. Sačuvani OCR nalaz ostaje izvor vrednosti za poređenje.
 
 2. Poređenje datuma
 

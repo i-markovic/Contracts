@@ -1,0 +1,5 @@
+Izvoz polja pocetak zakupa u JSON
+
+Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+
+Ulaz je nalazi_datum_pocetka_zakupa.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "pocetak zakupa". Izlazni fajl nazovi datum_pocetka_zakupa.json.

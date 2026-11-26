@@ -1,0 +1,22 @@
+Kategorija imovine — identifikacija iz OCR dokumenata
+
+1. Kao ulaze uzmi zadati obuhvat, registar osnovnih ugovora i OCR korpus. Filtriraj registar po obuhvatu, zadrži njegov redosled i proveri jedinstvenost case_id. Iz cost_center uzmi Z šifru, a iz path_to_file tačnu putanju. Popiši osnovne ugovore, anekse i druge OCR priloge u odgovarajućim folderima. Evidentiraj prazne, neusaglašene ili nečitljive izvore. Svaki osnovni ugovor ima svoj nalaz, uključujući više ugovora na istoj šifri.
+
+2. Utvrdi šta je zaista dato u zakup ili podzakup. Pročitaj ugovornu odredbu o predmetu i odredbe o nameni, dozvoljenoj upotrebi i gubitku licence. Poveži namenu sa konkretnim prostorom ili sredstvom. Traži izraze i OCR varijante na latinici i ćirilici. Koristi zabrane, raskid, odredbe o adaptaciji ili povezane operativne odluke kada zaista opisuju taj predmet i namenu. Opšti naziv prostora, naziv foldera, svojstvo zakupca i sam spisak opreme su tragovi koje moraš potvrditi.
+
+3. Primeni projektne vrednosti:
+   - Gaming facilities za shop, odnosno uplatno-isplatno mesto, kladionicu ili automat klub. Poslovna namena može biti dokazana i kada je prostor u stambenoj zgradi ili je katastarski opisan kao prostor druge namene. Ugostiteljska delatnost u istom shopu sama po sebi ne traži dodatnu kategoriju imovine.
+   - Land and Building za zakup stana za stanovanje, zasebno iznajmljenog parking mesta, garaže, zemljišta ili slične dokazano negaming nepokretnosti. Samostalni parking sa svojim ugovorom dobija svoj nalaz i kada je na istom Z kao shop.
+   - Motor vehicles za zakup vozila. Kod parkiranja i garažiranja utvrdi da li se ugovorom daje prostor, vozilo ili oboje.
+   - NA za nedovoljan, nečitljiv ili protivrečan dokaz, za dve ravnopravne kategorije koje se ovim poljem ne mogu predstaviti jednim kodom, ili za vrstu imovine bez odobrenog projektnog mapiranja. Navedi konkretan razlog.
+
+4. Za više prostora pročitaj operativne odredbe, namenu svakog dela i način predaje, obračuna i korišćenja. Kada parking služi shopu i ugovorene odredbe potvrđuju da je sporedan deo njegove funkcionalne celine, upiši Gaming facilities i citiraj odredbu koja ih povezuje. Poseban ugovor o parkingu obradi zasebno. Kod jednog ugovora sa shopom i samostalnim parkingom ili drugim ravnopravnim predmetom različite kategorije upiši NA ako dokazi ne određuju pretežni predmet. Površina, zajednički naslov ili zbirna zakupnina sami ne određuju prioritet.
+
+5. Poveži aneks sa osnovnim ugovorom po broju ili datumu, uz proveru strana i predmeta. Evidentiraj izmenu ili pojašnjenje predmeta i namene, kao i datum početka primene ako je naveden. Upotrebi poslednji dokazani primenljiv nalaz za isti osnovni ugovor u zadatom obuhvatu. Povezani osnovni ugovor ili odluka mogu biti dopunski dokaz tek kada identitet predmeta i relevantna namena proizlaze iz sadržaja i perioda. Ako je zaključak posredan, navedi lanac dokaza i njegovo ograničenje. Ista Z šifra sama ne dokazuje identitet prostora ni namenu određenog ugovora.
+
+6. Za svaki case_id sačuvaj Z, osnovnu OCR putanju, nalaz, doslovne citate sa putanjom, članom ili tačkom i redovima OCR-a od 1, vrstu dokaza, razlog odluke i pregledane anekse. Kada odredba nema član, navedi naziv odeljka, stranu ili drugi dostupan lokator. Sačuvaj originalni OCR tekst citata, uključujući greške i prelom redova, u polju pogodnom za mašinsko čitanje. Razdvoji citat od obrazloženja. Kod NA sačuvaj najbliže odredbe i objasni šta nedostaje. Ponovo proveri citate i case_id prema izvorima.
+
+
+Predaja nalaza
+
+Sačuvaj nalazi_kategorije_imovine.tsv kao UTF-8 TSV sa zaglavljem, pre otvaranja referentnog Excela. Koristi jedan red po osnovnom ugovoru, uključujući NA. Kolone obuhvataju case_id iz registra kada je veza potvrđena, Z šifru sa vodećim nulama, identitet ugovora i OCR izvor, izdvojenu vrednost u koloni nalaz i dokaz ili napomenu. Sačuvaj i dodatne podatke tražene iznad. Ako se case_id ne može pouzdano povezati, zabeleži razlog i jednoznačan OCR identifikator u evidenciji. Polja koja sadrže tabulator, navodnike ili prelom reda zapiši prema pravilima citiranja TSV polja. Proveri obuhvat i duplikate ponovnim čitanjem TSV-a.

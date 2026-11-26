@@ -1,0 +1,19 @@
+Kategorija imovine — validacija prema Excelu
+
+Ulaz za verifikaciju je nalazi_kategorije_imovine.tsv, sačuvan posle identifikacije. Koristi nalaz i Z šifru iz tog TSV-a. Sačuvaj dopunjenu evidenciju kao UTF-8 evidencija_kategorije_imovine.tsv, uz poređenja i ishode.
+
+1. Ulazi su zadati obuhvat, registar osnovnih ugovora, OCR korpus i nalazi_kategorije_imovine.tsv i referentna Excel datoteka. Proveri obuhvat i jedinstvenost case_id prema registru. Otvori list contract-entries i potvrdi da kolona G predstavlja Asset cost center, a F Asset category. Poziciju zaglavlja utvrdi u konkretnoj datoteci.
+
+2. Za svaki case_id uzmi Z iz cost_center u registru. Prikupi sve Excel redove sa tačnom Z šifrom u G, uz zanemarivanje okolnih razmaka i veličine slova. Sačuvaj brojeve Excel redova, izvorne G i F vrednosti i razlog eventualnog isključenja. Šifre sa Excel redovima van registra prikaži odvojeno u statistici ako pripadaju zadatom Excel obuhvatu. Kod zajedničke Z šifre G/F potvrđuju pripadnost skupu kategorija na lokaciji. Za pripisivanje pojedinačnog reda ugovoru potreban je pouzdan dodatni ključ.
+
+3. Proveri doslovne F nazive u konkretnoj datoteci. Za poređenje zanemari okolne razmake i veličinu slova i koristi izričito mapiranje punih Excel naziva na kratke projektne oznake. U dosadašnjem izvoru "gaming facilities (betting shops, casinos, gaming arcades)" odgovara "Gaming facilities", "land and buildings, leasehold improvements (which aren't gaming facilities)" odgovara "Land and Building", a "motor vehicles" odgovara "Motor vehicles". Druge prepoznate Excel kategorije, poput "slot machines" i "factory and office equipment", zadrži kao upotrebljive zasebne kategorije. Prazne ćelije, greške, oznake odsustva podataka i vrednosti koje ne možeš da identifikuješ posebno evidentiraj i isključi iz poređenja. Ne izjednačavaj samostalnu opremu sa prostorom shopa.
+
+4. Dodeli jedan ishod svakom case_id. Prvo izdvoji "NA iz OCR-a". Za ostale nalaze "Nema Excel reda za Z" znači da nema tačne Z šifre, a "Z bez upotrebljive vrednosti F" znači da redovi postoje, ali F ne daje upotrebljivu kategoriju. Za uporedive ugovore ishod je "Potpuno poklapanje" ako sve upotrebljive vrednosti odgovaraju nalazu, "Delimično poklapanje" ako odgovara bar jedna i preostaje druga kategorija, ili "Nepoklapanje" ako nijedna upotrebljiva kategorija ne odgovara. Evidentiraj i Excel dostupnost za svaki OCR NA.
+
+5. Ponovo proveri svako potpuno ili delimično nepoklapanje, NA i problem dostupnosti, u izvornim ćelijama i relevantnim OCR članovima. Upiši razloge i granice u evidencija_kategorije_imovine.tsv uz nalaz, dokaze, Excel redove i ishod. Validacija čita zamrznuti nalaz. Ako nezavisna provera izvora potvrdi materijalnu OCR grešku, evidentiraj dokaz, verzioniši ispravku izdvajanja i ponovi validaciju.
+
+6. Sačuvaj nepoklapanja_kategorije_imovine.txt u UTF-8 bez zaglavlja. Za svaki case_id sa ishodom "Nepoklapanje" upiši po jedan red po različitoj upotrebljivoj izvornoj F vrednosti u obliku Z | originalni Excel | nalaz. Ugovore iste Z šifre ne spajaj. Delimična poklapanja, NA i nedostajući Excel podaci prikazuju se u TSV-u i statistici. Ako nema potpunih nepoklapanja, TXT je prazan.
+
+7. U statistika.md navedi obuhvat, broj svih ishoda, raspodelu kategorija uključujući NA, broj uporedivih ugovora, izvore, tačne Excel nazive, razloge svih odstupanja i broj TXT redova. Stopa je (potpuna + delimična poklapanja) / svi uporedivi ugovori. Posebno prikaži stopu potpunog poklapanja. Za nula uporedivih ugovora prikaži stopu kao NA.
+
+8. Ponovo učitaj TSV i TXT. Proveri jedinstvenost i obuhvat case_id, jednakost nalaza sa ulaznim TSV-om, ishode i broj TXT redova prema statistici.

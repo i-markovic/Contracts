@@ -1,5 +1,7 @@
 Instrukcija za validaciju broja osnovnog ugovora
 
+Ulaz za verifikaciju je nalazi_broja_ugovora.tsv, sačuvan posle identifikacije. Koristi nalaz i Z šifru iz tog TSV-a. Sačuvaj dopunjenu evidenciju kao UTF-8 evidencija_broja_ugovora.tsv, uz poređenja i ishode.
+
 1. Evidencija nalaza
 
 Sačuvaj evidenciju u TSV formatu sa jednim zapisom po ugovoru. Navedi Z šifru, datum zaključenja kada je utvrđen, utvrđeni broj ili brojeve, izvorni OCR fajl i ishod poređenja. Kada je godina dopisana, navedi izvorni broj i datum na osnovu kojeg je dopisana.

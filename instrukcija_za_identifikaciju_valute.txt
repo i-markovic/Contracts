@@ -1,12 +1,13 @@
 Valuta ugovora — identifikacija iz OCR dokumenata
 
-1. Pregledaj sve .ocr.txt fajlove u zadatom obuhvatu, uključujući podfoldere. Iz registra uzmi case_id i poveži osnovni ugovor preko Z šifre i putanje prema instrukcija_za_izvoz_polja_u_json.txt. Objedini prepise istog ugovora prema stranama, predmetu i datumu ili broju ugovora. Zabeleži povezane anekse i priloge. Drugi osnovni ugovor na istoj lokaciji ima zaseban rezultat.
+1. Pregledaj sve .ocr.txt fajlove u zadatom obuhvatu, uključujući podfoldere. Iz registra uzmi case_id i poveži osnovni ugovor preko Z šifre i putanje iz registra. Objedini prepise istog ugovora prema stranama, predmetu i datumu ili broju ugovora. Zabeleži povezane anekse i priloge. Drugi osnovni ugovor na istoj lokaciji ima zaseban rezultat.
 2. Pronađi odredbu o iznosu zakupnine ili podzakupnine. Pročitaj ceo stav, iznos slovima, susedne odredbe i eventualna upućivanja. Pretraži latinicu, ćirilicu, simbole i OCR varijante. Vrati međunarodnu troslovnu oznaku valute kojom je izražena ugovorena cena.
 3. Ako je zakupnina izražena u EUR a izmiruje se u dinarskoj protivvrednosti, evidentiraj EUR. Fiksnu zakupninu izraženu u dinarima evidentiraj kao RSD. Sama kursna klauzula, račun za uplatu, depozit, porez, trošak struje ili drugi iznos ne dokazuju denominaciju. Skraćenicu „e“ razreši pratećim tekstom o istoj zakupnini.
 4. Poveži aneks pomoću pozivanja na broj ili datum osnovnog ugovora i podatke o prostoru ili stranama. Prati redosled i početak primene izmena. Zadrži prvobitnu valutu i zabeleži novu uz citat i datum kada se primenjuje. Za izdvojenu vrednost uzmi poslednju dokazanu denominaciju koja je stupila u primenu do datuma preseka. Zabeleži i potvrđenu buduću promenu sa datumom primene. Ako ima više istovremenih stvarnih denominacija koje se ne mogu svesti na jednu, rezultat je NA uz opis.
 5. Za svaku odluku sačuvaj case_id, Z, izvor, član ili tačku, redove OCR-a, neizmenjen isečak i obrazloženje. Kod nedovoljnog ili protivrečnog dokaza ponovo pročitaj ceo član i povezane anekse. Ako ostane neodređeno, zabeleži NA i konkretan razlog.
-6. Proveri da svaki citat postoji u navedenom izvoru i da se skup identifikatora poklapa sa registrom. Sačuvaj JSON i izračunaj SHA-256 pre otvaranja Excel podataka. Excel ne učestvuje u identifikaciji.
+6. Proveri da svaki citat postoji u navedenom izvoru i da se skup identifikatora poklapa sa registrom. Završi izdvajanje pre otvaranja Excel podataka. Excel ne učestvuje u identifikaciji.
 
-Izlaz za predaju je JSON niz u izvornom redosledu filtriranih redova registra. Svaki objekat ima tačno tri tekstualna ključa ovim redom: case_id, field i value. case_id se prepisuje iz registra, field je uvek "valuta", a value je međunarodni troslovni kod valute ili "NA". U evidencija_valute.tsv sačuvaj ceo dokazni trag odvojeno od projekcije za predaju.
 
-Sačuvaj valuta.json u izlaznom direktorijumu ove obrade prema zadatom obuhvatu.
+Predaja nalaza
+
+Sačuvaj nalazi_valute.tsv kao UTF-8 TSV sa zaglavljem, pre otvaranja referentnog Excela. Koristi jedan red po osnovnom ugovoru, uključujući NA. Kolone obuhvataju case_id iz registra kada je veza potvrđena, Z šifru sa vodećim nulama, identitet ugovora i OCR izvor, izdvojenu vrednost u koloni nalaz i dokaz ili napomenu. Sačuvaj i dodatne podatke tražene iznad. Ako se case_id ne može pouzdano povezati, zabeleži razlog i jednoznačan OCR identifikator u evidenciji. Polja koja sadrže tabulator, navodnike ili prelom reda zapiši prema pravilima citiranja TSV polja. Proveri obuhvat i duplikate ponovnim čitanjem TSV-a.

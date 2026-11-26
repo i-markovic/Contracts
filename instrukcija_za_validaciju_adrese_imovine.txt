@@ -1,5 +1,7 @@
 Instrukcija za validaciju adrese imovine
 
+Ulaz za verifikaciju je nalazi_adrese_imovine.tsv, sačuvan posle identifikacije. Koristi nalaz i Z šifru iz tog TSV-a. Sačuvaj dopunjenu evidenciju kao UTF-8 evidencija_adrese_imovine.tsv, uz poređenja i ishode.
+
 1. Evidencija nalaza
 
 Sačuvaj evidenciju u TSV formatu sa jednim zapisom po ugovoru. Za svaki ugovor zabeleži Z šifru sa vodećim nulama, broj i datum ugovora kada su utvrđeni, izdvojenu adresu, relevantne OCR fajlove i napomenu za nejasnoće. Kada aneks menja adresu, zabeleži koji je aneks izvršio promenu. Unutar foldera poređaj zapise po datumu zaključenja ugovora.

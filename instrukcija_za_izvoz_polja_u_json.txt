@@ -1,10 +1,7 @@
-Predaja rezultata detekcije po osnovnom ugovoru
+Zajednički format opcionog JSON izvoza
 
-Koristi C:\Kontroling\IFRS\ugovori\registar_osnovnih_ugovora.csv kao spisak ugovora. Za svaki ugovor preuzmi postojeći case_id kao tekst. Za povezivanje koristi cost_center i path_to_file. Dopunski OCR i povezane anekse pridruži istom ugovoru prema pravilima detekcije polja. Kada je path_to_file prazno, proveri identitet preko datuma ugovora i povezanog dokumenta iz evidencije. Ako povezivanje ostane dvosmisleno, prijavi konkretne zapise radi razrešenja pre konačnog izvoza.
+Pokreni izvoz na zahtev prema instrukciji za izvoz konkretnog entiteta. Koristi njegov sačuvani TSV kao izvor vrednosti i registar osnovnih ugovora za case_id i redosled. Kao merodavnu koristi identifikovanu vrednost iz kolone nalaz, uključujući NA. Ako u traženom obuhvatu nedostaje nalaz za određeni registarski zapis ili veza sa case_id ostane dvosmislena, navedi tačne zapise za razrešenje pre završetka izvoza.
 
-Svaki agent upisuje samo JSON fajl svog polja u C:\Kontroling\IFRS\ugovori. Sačuvaj UTF-8 JSON niz redosledom iz registra, sa tačno jednim objektom za svaki case_id. Svaki objekat ima tri ključa sa tekstualnim vrednostima:
-{"case_id": "<postojeći case_id>", "field": "<tačan naziv polja>", "value": "<izdvojena vrednost>"}
+Sačuvaj UTF-8 JSON niz u zadatom izlaznom direktorijumu, sa jednim objektom po case_id u traženom obuhvatu. Objekat ima tačno tri tekstualne vrednosti pod ključevima case_id, field i value.
 
-U value prenesi konačan nalaz prema instrukciji detekcije, sa dijakriticima i svim potvrđenim delovima vrednosti. Za već obrađeno polje koristi poslednju evidenciju izdvojenih nalaza. Kada vrednost nije utvrđena, upiši tekst "NA". Uključi sve ugovore bez obzira na ishod validacije u Excelu. Excel vrednost i normalizaciju za poređenje koristi samo u postupku validacije.
-
-Ponovo učitaj sačuvani JSON. Proveri da su case_id oznake jedinstvene i da tačno odgovaraju registru, da svaki objekat ima propisana tri ključa i da je field ispravan u svim zapisima. Vrati putanju do fajla, broj zapisa i broj vrednosti "NA".
+Ponovo učitaj rezultat i proveri ključeve, tipove, jedinstvenost, redosled, obuhvat i jednakost vrednosti sa TSV-om. Navedi putanju, broj zapisa i broj NA.

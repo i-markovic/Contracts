@@ -1,11 +1,12 @@
 Valuta ugovora — validacija zamrznutog izdvajanja
 
-1. Polazi od zamrznutog valuta.json. Proveri SHA-256. U zadatoj Excel datoteci otvori list contract-entries i proveri zaglavlja. G određuje Z šifru, D sadrži Currency code.
+Ulaz za verifikaciju je nalazi_valute.tsv, sačuvan posle identifikacije. Koristi nalaz i Z šifru iz tog TSV-a. Sačuvaj dopunjenu evidenciju kao UTF-8 evidencija_valute.tsv, uz poređenja i ishode.
+
+1. Polazi od sačuvanog nalazi_valute.tsv. U zadatoj Excel datoteci otvori list contract-entries i proveri zaglavlja. G određuje Z šifru, D sadrži Currency code.
 2. Za svaki case_id prikupi sve redove sa tačnom Z šifrom (zanemari okolne razmake i veličinu slova). Sačuvaj brojeve redova i izvorne vrednosti D. Za poređenje normalizuj samo okolne razmake i veličinu slova. Upotrebljiv je prepoznat međunarodni kod valute. Prazno, greške, oznake nedostajućih podataka i neprepoznate vrednosti posebno evidentiraj i isključi.
 3. Razdvoji NA iz OCR-a, odsustvo Z reda i Z bez upotrebljivog D. Ti ishodi nisu uporedivi. U drugim slučajevima uporedi denominaciju sa svim upotrebljivim vrednostima. Ako su svi kodovi jednaki nalazu, ishod je potpuno poklapanje. Ako odgovara bar jedan ali ne svi, ishod je delimično poklapanje. Ako nijedan ne odgovara, ishod je nepoklapanje.
-4. Kod zajedničke Z šifre posebno obeleži da se proverava pripadnost skupu za lokaciju. Bez ključa ugovora pojedinačni Excel red se ne može pripisati određenom ugovoru. Ponovo pregledaj sve razlike i NA, uključujući izvorne ćelije i OCR odredbe, i navedi zaključak bez izmene zamrznutog JSON-a.
+4. Kod zajedničke Z šifre posebno obeleži da se proverava pripadnost skupu za lokaciju. Bez ključa ugovora pojedinačni Excel red se ne može pripisati određenom ugovoru. Ponovo pregledaj sve razlike i NA, uključujući izvorne ćelije i OCR odredbe, i navedi zaključak bez izmene sačuvanog OCR nalaza.
 5. U UTF-8 TXT bez zaglavlja upiši za svaki nepoklopljeni ugovor po jedan red za svaku različitu upotrebljivu izvornu vrednost D u obliku Z | excel vrednost | pronađena vrednost. Ugovore sa istom šifrom ne spajaj. Izveštaj sadrži sve ishode, raspodelu valuta, broj TXT redova i stopu (potpuna + delimična poklapanja) / uporedivi ugovori.
 
-Kontrola predaje: proveri tačno tri ključa case_id, field, value, njihove tekstualne tipove, field = "valuta", redosled i potpunost prema registru. Vrednost svakog ugovora mora odgovarati zamrznutom nalazu i dokazima u TSV-u. Ako se posle validacije menja samo izlazna šema, evidentiraj oba SHA-256 otiska i proveri jednakost svih parova case_id/value.
 
 Sačuvaj evidencija_valute.tsv sa po jednim redom po case_id, prvobitnom i merodavnom valutom, izvorima, citatima, originalnim vrednostima D, brojevima Excel redova i ishodom. Fajl razlika nazovi nepoklapanja_valute.txt. U statistici navedi broj foldera i ugovora, a uz stopu prikaži brojilac i imenilac. Ako nema uporedivih ugovora, prikaži „nema uporedivih ugovora”.
