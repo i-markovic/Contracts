@@ -1,0 +1,51 @@
+Glavna instrukcija za obradu adresa imovine — verzija 2
+
+1. Izvori i jedinica obrade
+
+Koristi sadržaj .ocr.txt dokumenata. U svakom izabranom folderu utvrdi koji su dokumenti ugovori, koji su aneksi i koji imaju drugu svrhu. Za svaki zaseban ugovor o zakupu ili podzakupu napravi poseban zapis, čak i kada više ugovora za istu Z šifru navodi istu adresu. Naziv fajla, naziv foldera i Excel vrednost ne koristi za dopunjavanje nalaza.
+
+2. Prepoznavanje imovine
+
+Počni od člana koji opisuje predmet zakupa i odredbe kojom se prostor daje u zakup. Kod podzakupa utvrdi koji se prostor daje u podzakup. Ako ugovor navodi veći objekat i njegov deo, izdvoj adresu i izričitu oznaku dela koji se izdaje. Proveri i preambulu, povezane anekse i priloge na koje se ugovor poziva kada preciziraju predmet.
+
+Razlikuj adresu prostora od sedišta firme, prebivališta fizičkog lica, adrese zastupnika, adrese za dostavu i mesta zaključenja ugovora. Čak i kada ugovorna strana ima adresu u istoj ulici, njen kućni broj uzmi samo ako ga tekst vezuje i za predmet zakupa.
+
+3. Promene kroz anekse
+
+Poveži aneks sa osnovnim ugovorom prema broju ili datumu navedenom u tekstu i opisu predmeta. Vezu može da potvrdi i pozivanje na prethodno pouzdano povezani aneks. Ista Z šifra ili ista adresa sama nije dovoljna.
+
+Prati povezane anekse hronološki. Primeni poslednju potvrđenu promenu adrese ili ispravku njenog zapisa. Ako kasniji aneks menja samo zakupninu, trajanje ili površinu, prenesi prethodno potvrđenu adresu. Kod spajanja sa susednim lokalom proveri da li aneks menja predmet tog ugovora ili samo dozvoljava radove. Adresu susednog lokala dodaj samo ako se i on izdaje tim ugovorom.
+
+4. Sastavljanje adrese
+
+Zapiši adresu redom: mesto ili naselje, ulica ili drugi naziv lokacije, kućni broj i izričita adresna oznaka lokala ili jedinice. Grad, opštinu i naselje sačuvaj kada su navedeni i potrebni za identifikaciju. Padežne oblike prevedi u nominativ kada je značenje jasno. Rezultat napiši na srpskoj latinici, sa dijakriticima kada su pouzdano utvrđeni.
+
+Sačuvaj slovni nastavak, kosu crtu, raspon, više brojeva, rimsku oznaku i izričito navedeno „bb”. Razlikuj broj u nazivu ulice od kućnog broja. Sačuvaj oznaku poput „lokal 9” kada identifikuje jedinicu. Oznake objekta, ulaza ili posebnog dela prenesi sa njihovim značenjem kada su potrebne za razlikovanje prostora. Broj objekta, broj parcele i broj lista nepokretnosti ne pretvaraj u kućni broj.
+
+Ako su zaista izdata dva prostora ili prostor ima dve potvrđene adrese, sačuvaj obe u zapisu tog ugovora i naznači njihov odnos. Posebno označi opis ulaza iz druge ulice. Kada je adresa zvanično promenjena, kao rezultat upiši novu adresu, a prethodnu po potrebi navedi u napomeni.
+
+5. Nepotpun ili protivrečan nalaz
+
+Ako je adresa delimična, vrati potvrđene elemente i u napomeni navedi šta nedostaje. Izostavljen broj ne upisuj kao „bb”. Nečitljiv deo pokušaj da potvrdiš na drugom mestu u istom ugovoru ili u njegovom aneksu. Ako ugovor i dalje daje međusobno nespojive adrese istog prostora, a merodavna verzija se ne može utvrditi, upiši NA i u napomeni sačuvaj obe varijante i mesto neslaganja. Upiši NA i kada se adresa imovine uopšte ne može utvrditi.
+
+6. Zapis nalaza
+
+Za svaki ugovor zabeleži Z šifru sa vodećim nulama, broj i datum ugovora kada su utvrđeni, izdvojenu adresu, relevantne OCR fajlove i napomenu za nejasnoće. Kada aneks menja adresu, zabeleži koji je aneks izvršio promenu. Unutar foldera poređaj zapise po datumu zaključenja ugovora.
+
+7. Poređenje adresa u ovoj obradi
+
+Prvo završi izdvajanje iz OCR teksta. Zatim na listu contract-entries izaberi sve redove sa istom Z šifrom u koloni G i koristi neprazne vrednosti iz kolone H (adresa imovine). Sačuvaj originalni Excel zapis i punu izdvojenu adresu. Normalizaciju primeni samo pri poređenju.
+
+Zanemari razlike u pismu, velikim i malim slovima, dijakriticima, razmacima i interpunkciji kada značenje ostaje isto. Ispred kućnog broja izjednači oznake „br.”, „broj” i zapis bez oznake. Tako „Čede Vasovića br. 72” i „Čede Vasovića 72” imaju istu ulicu i broj. Sačuvaj značenje kose crte, raspona i oznake jedinice.
+
+Svaki ugovor oceni zasebno. Prvo traži potpuno poklapanje među svim Excel vrednostima za šifru. Ako ga nema, proveri jednosmerni podskup: Excel može sadržati kraću verziju potvrđene adrese. Svaki adresni podatak naveden u Excelu mora odgovarati istom predmetu zakupa. Excel može izostaviti mesto, kućni broj, lokal, ulaz ili drugu oznaku jedinice. Na primer, Excel „Čede Vasovića 72” prolazi prema ugovoru „Požarevac, Čede Vasovića 72”, a Excel „Kragujevac, Svetogorska 1a” prolazi prema ugovoru „Kragujevac, Svetogorska 1a, lokal 9”.
+
+Kada su ostali navedeni elementi adrese saglasni, prihvati osnovni kućni broj iz Excela kao podskup preciznijeg broja u ugovoru. Excel „7” prolazi prema „7a”, „7b”, „7/1” ili „7/2”. Uporedi ceo osnovni broj: „7” prema „70a” ili „5a” daje razliku. Ako oba zapisa navode nastavak, proveri i njega: „7a” prema „7b” i „7/1” prema „7/2” daju razliku. Pravilo važi u jednom smeru. Excel „7a” prema ugovoru „7” ne ispunjava uslov, kao ni dva različita izričito navedena kućna broja. U ugovornom nalazu uvek sačuvaj izvorni nastavak.
+
+Jedna odgovarajuća Excel vrednost dovoljna je za pozitivnu identifikaciju adrese tog ugovora. Ostale vrednosti za istu šifru tada ne daju redove razlika. Podudarnost adrese sama po sebi ne utvrđuje koji Excel red pripada konkretnom ugovoru.
+
+8. Evidencija, razlike i statistika
+
+U evidenciji prikaži posebno potpuno poklapanje i poklapanje po podskupu. Oba ulaze u pozitivne identifikacije. Ako nema pozitivnog poklapanja, označi različitu adresu, nepotpunu adresu ili nedostatak Excel vrednosti prema razlogu. Nalaz NA izdvoji iz poređenja i prikaži u posebnoj statistici.
+
+Sačuvaj razlike kao UTF-8 TXT bez zaglavlja. Format reda je „Z | Excel vrednost | izdvojena adresa”. Za ugovor bez poklapanja upiši po jedan red za svaku različitu originalnu Excel vrednost. Kada nema šifre ili neprazne vrednosti u H, ostavi srednje polje prazno. Sortiraj po punom nazivu foldera, zatim po datumu ugovora. U statistici odvojeno prikaži broj foldera, broj ugovora po ishodu i broj redova u fajlu razlika.
