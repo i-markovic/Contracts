@@ -12,3 +12,6 @@ JSON je zaseban izvoz iz TSV-a na zahtev.
 | Početak zakupa | [TSV](instrukcija_za_identifikaciju_datum_pocetka_zakupa.txt) | [Verifikacija](instrukcija_za_validaciju_datum_pocetka_zakupa.txt) | Q | [Izvoz](instrukcija_za_izvoz_datum_pocetka_zakupa_u_json.txt) |
 | Valuta ugovora | [TSV](instrukcija_za_identifikaciju_valute.txt) | [Verifikacija](instrukcija_za_validaciju_valute.txt) | D | [Izvoz](instrukcija_za_izvoz_valute_u_json.txt) |
 | Kategorija imovine | [TSV](instrukcija_za_identifikaciju_kategorije_imovine.txt) | [Verifikacija](instrukcija_za_validaciju_kategorije_imovine.txt) | F | [Izvoz](instrukcija_za_izvoz_kategorije_imovine_u_json.txt) |
+| Kraj zakupa | [TSV](instrukcija_za_identifikaciju_datum_kraja_zakupa.txt) | [Verifikacija](instrukcija_za_validaciju_datum_kraja_zakupa.txt) | U | — |
+| Automatsko produženje | [TSV](instrukcija_za_identifikaciju_automatskog_produzenja.txt) | [Verifikacija](instrukcija_za_validaciju_automatskog_produzenja.txt) | V | — |
+| Trajanje produženja | [TSV](instrukcija_za_identifikaciju_trajanja_produzenja.txt) | [Verifikacija](instrukcija_za_validaciju_trajanja_produzenja.txt) | W | — |
