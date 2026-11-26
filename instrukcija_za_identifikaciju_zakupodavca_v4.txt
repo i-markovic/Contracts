@@ -1,12 +1,13 @@
-Iz dostavljenih tekstova utvrdi zakupodavce za svaki zaseban ugovor
-o zakupu ili podzakupu istog lokala.
+Identifikacija zakupodavca iz OCR teksta
+
+U zadatom obuhvatu pregledaj sve .ocr.txt fajlove u folderu svakog lokala i svim njegovim podfolderima. Ako je zadat raspon, obuhvati oba granična foldera i sve postojeće foldere između njih po punom nazivu. Z šifru preuzmi iz foldera sa vodećim nulama. Nalaz zasnivaj samo na tekstu dokumenata. Više OCR prepisa istog ugovora tretiraj kao jedan ugovor.
 
 A. Izbor dokumenata i povezivanje aneksa
 
 Razlikuj ugovore i anekse od ostalih dokumenata za isti lokal, kao što
 su odluke o radnom vremenu. Svaki zaseban ugovor daje jedan zapis.
 Aneks dopunjava zapis svog ugovora. Novi ugovor daje poseban zapis
-i kada zamenjuje prethodni. Zapise poređaj po datumu zaključenja ugovora.
+i kada zamenjuje prethodni.
 
 Aneks poveži sa ugovorom koji menja prema broju ili datumu ugovora
 navedenom u tekstu, odnosno preko drugog aneksa čija je veza potvrđena.
@@ -28,13 +29,7 @@ ulazi u zapis samo ako mu je dodeljena i uloga zakupodavca. Ako nejasna
 veza ili redosled aneksa utiču na to ko je merodavan, odnosno ako
 identitet nije pouzdano utvrđen, za taj ugovor u polje zakupodavca upiši NA.
 
-C. Zapis za svaki ugovor
-
-Navedi broj i datum ugovora, broj i datum poslednjeg povezanog aneksa
-kada postoji, i merodavnog zakupodavca. Brojeve i datume preuzmi iz
-teksta dokumenta kada su utvrđeni. Ako ugovor ima više zakupodavaca,
-navedi ih zajedno u istom zapisu. Na identifikaciju i formatiranje
-zakupodavca u svakom zapisu primeni sledeća osnovna pravila.
+C. Prepoznavanje i oblik imena
 
 1. Počni od uvoda u kojem se definišu ugovorne strane. Utvrdi ko je u
    konkretnom dokumentu označen kao zakupodavac. Kod podzakupa izdvoji

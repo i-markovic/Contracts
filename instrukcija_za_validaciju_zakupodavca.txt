@@ -1,18 +1,8 @@
-Poređenje sa Excelom i izlaz
+Instrukcija za validaciju zakupodavca
 
-1. Ulaz i obuhvat
+1. Evidencija nalaza
 
-Obradi postojeće foldere u zadatom obuhvatu, sortirane po punom nazivu.
-Ako je dat raspon naziva foldera, uključi oba granična foldera.
-Z šifre preuzmi iz postojećih foldera i zadrži vodeće nule.
-
-Za identifikaciju zakupodavca koristi sadržaj .ocr.txt fajlova i primeni
-instrukciju v4. Klasifikuj dokumente prema sadržaju. Ugovor i njegov aneks
-pripadaju istom zapisu, dok novi ugovor daje zaseban zapis. Kada ima više
-OCR prepisa istog ugovora, evidentiraj ga jednom. Za svaki ugovor zabeleži
-Z šifru, broj i datum ugovora, broj i datum poslednjeg povezanog aneksa
-kada postoje i merodavnog zakupodavca. Zabeleži nejasnoće u evidenciji.
-Ako radiš samo novo poređenje, koristi već utvrđene zakupodavce.
+Koristi utvrđene zakupodavce za zadati obuhvat. Za svaki zaseban ugovor navedi Z šifru sa vodećim nulama, broj i datum ugovora, broj i datum poslednjeg povezanog aneksa kada postoje, i merodavnog zakupodavca. Zabeleži nejasnoće. Brojeve i datume prenesi iz OCR nalaza kada su utvrđeni.
 
 2. Poređenje
 
@@ -38,7 +28,7 @@ pojedinačnim ugovorom zahteva zaseban dokaz.
 
 3. Izlaz i statistika
 
-Sačuvaj evidenciju sa jednim zapisom po ugovoru. Sortiraj po punom nazivu
+Sačuvaj TSV evidenciju sa jednim zapisom po ugovoru. Sortiraj po punom nazivu
 foldera, a u istom folderu po datumu zaključenja ugovora.
 
 Sačuvaj fajl sa razlikama kao UTF-8 TXT bez zaglavlja. Format jednog reda:

@@ -1,0 +1,14 @@
+Instrukcija za validaciju broja osnovnog ugovora
+
+1. Evidencija nalaza
+
+Sačuvaj evidenciju u TSV formatu sa jednim zapisom po ugovoru. Navedi Z šifru, datum zaključenja kada je utvrđen, utvrđeni broj ili brojeve, izvorni OCR fajl i ishod poređenja. Kada je godina dopisana, navedi izvorni broj i datum na osnovu kojeg je dopisana.
+
+2. Poređenje sa Excelom
+
+Tek posle izdvajanja proveri sve neprazne vrednosti kolone C (External contract no.) na listu contract-entries za istu Z šifru u G. Zadrži vodeće nule. Poredi ceo niz grupa cifara. Zanemari pismo, dijakritike, razmak, oznake „br.”, „broj”, „IN” i tip razdelnika između grupa. Razmak između jasno odvojenih delova broja može zameniti crtu. Za sve delove osim godine zahtevaj isti redosled i identične cifre, uključujući vodeće nule. U delu koji označava godinu prihvati četvorocifreni i odgovarajući dvocifreni oblik. Tako 007/19 prolazi prema 007-2019, dok 7/19 prema 007/2019 ostaje razlika. U izlazu zadrži godinu kako je pročitana, a dopisanu godinu prikaži sa dve cifre.
+
+Iz Excel vrednosti izdvoj broj ugovora i zanemari slobodan opis, datum, tehničke šifre kopije ili korekcije i broj aneksa. Ako ćelija izričito navodi brojeve dva osnovna ugovora, svaki može potvrditi odgovarajući nalaz. Broj iz opisa ne prihvataj samo zato što se njegove cifre poklapaju. Dovoljno je jedno poklapanje za Z šifru. Ono samo po sebi ne povezuje ugovor sa određenim Excel redom.
+
+3. Izlaz
+Sačuvaj UTF-8 TXT bez zaglavlja u formatu „Z | originalna Excel vrednost | broj ugovora iz OCR-a”. Kada za ugovor nema poklapanja, prikaži po jedan red za svaku različitu raspoloživu Excel vrednost sa brojem ugovora. Izostavi prazna polja i oznake nedostajuće vrednosti. Ugovore sa nalazom NA i ugovore bez upotrebljivog Excel broja evidentiraj odvojeno od nepoklapanja. Svaki ugovor ima jedan ishod; najpre izdvoji NA. Sortiraj po punom nazivu foldera pa datumu zaključenja kada je utvrđen. Statistiku navedi po ugovorima, uz broj foldera, redova razlika i procenat poklapanja među uporedivim ugovorima.

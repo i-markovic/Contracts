@@ -1,0 +1,26 @@
+Instrukcija za validaciju adrese imovine
+
+1. Evidencija nalaza
+
+Sačuvaj evidenciju u TSV formatu sa jednim zapisom po ugovoru. Za svaki ugovor zabeleži Z šifru sa vodećim nulama, broj i datum ugovora kada su utvrđeni, izdvojenu adresu, relevantne OCR fajlove i napomenu za nejasnoće. Kada aneks menja adresu, zabeleži koji je aneks izvršio promenu. Unutar foldera poređaj zapise po datumu zaključenja ugovora.
+
+2. Poređenje sa Excelom
+Prvo završi izdvajanje iz OCR teksta. Zatim na listu contract-entries izaberi sve redove sa istom Z šifrom u koloni G i koristi neprazne vrednosti iz kolone H (adresa imovine). Sačuvaj originalni Excel zapis i punu izdvojenu adresu. Normalizaciju primeni samo pri poređenju.
+
+Zanemari razlike u pismu, velikim i malim slovima, dijakriticima, razmacima i interpunkciji kada značenje ostaje isto. Ispred kućnog broja izjednači oznake „br.”, „broj” i zapis bez oznake. Tako „Čede Vasovića br. 72” i „Čede Vasovića 72” imaju istu ulicu i broj. Sačuvaj značenje kose crte, raspona i oznake jedinice.
+
+Pri poređenju zanemari pomoćnu oznaku „ulica” ili „ul.” ispred naziva, uključujući zapis bez razmaka kao „ul.Polgar”. Zadrži sam naziv ulice i razlikovne oznake poput „trg”, „bulevar” ili „kej”. Pomoćne oznake uklanjaj kao cele reči ili skraćenice.
+
+Prihvati različite padežne oblike iste reči ili imena kada je iz cele adrese jasno da označavaju isto mesto ili ulicu. Proveri da je promena gramatički objašnjiva i da se ostali adresni podaci slažu prema pravilima poređenja. Primeri su „Polgar Andraš” i „Polgar Andraša”, kao i „14. oktobar” i „14. oktobra”. Ako su padež i pomoćne oznake jedine razlike, evidentiraj potpuno poklapanje posle normalizacije. Kada Excel dodatno izostavlja potvrđeni podatak, primeni pravilo podskupa. Nemoj automatski odsecati završetke reči. Razlika u osnovi prezimena, poput „Kodića” i „Kondića”, ostaje razlika dok je tekst dokumenta pouzdano ne razreši.
+
+Svaki ugovor oceni zasebno. Prvo traži potpuno poklapanje među svim Excel vrednostima za šifru. Ako ga nema, proveri jednosmerni podskup: Excel može sadržati kraću verziju potvrđene adrese. Svaki adresni podatak naveden u Excelu mora odgovarati istom predmetu zakupa. Excel može izostaviti mesto, kućni broj, lokal, ulaz ili drugu oznaku jedinice. Na primer, Excel „Čede Vasovića 72” prolazi prema ugovoru „Požarevac, Čede Vasovića 72”, a Excel „Kragujevac, Svetogorska 1a” prolazi prema ugovoru „Kragujevac, Svetogorska 1a, lokal 9”.
+
+Kada su ostali navedeni elementi adrese saglasni, prihvati osnovni kućni broj iz Excela kao podskup preciznijeg broja u ugovoru. Excel „7” prolazi prema „7a”, „7b”, „7/1” ili „7/2”. Uporedi ceo osnovni broj: „7” prema „70a” ili „5a” daje razliku. Ako oba zapisa navode nastavak, proveri i njega: „7a” prema „7b” i „7/1” prema „7/2” daju razliku. Pravilo važi u jednom smeru. Excel „7a” prema ugovoru „7” ne ispunjava uslov, kao ni dva različita izričito navedena kućna broja. U ugovornom nalazu uvek sačuvaj izvorni nastavak.
+
+Jedna odgovarajuća Excel vrednost dovoljna je za pozitivnu identifikaciju adrese tog ugovora. Ostale vrednosti za istu šifru tada ne daju redove razlika. Podudarnost adrese sama po sebi ne utvrđuje koji Excel red pripada konkretnom ugovoru.
+
+3. Razlike i statistika
+
+U evidenciji prikaži posebno potpuno poklapanje i poklapanje po podskupu. Oba ulaze u pozitivne identifikacije. Ako nema pozitivnog poklapanja, označi različitu adresu, nepotpunu adresu ili nedostatak Excel vrednosti prema razlogu. Nalaz NA izdvoji iz poređenja i prikaži u posebnoj statistici.
+
+Sačuvaj razlike kao UTF-8 TXT bez zaglavlja. Format reda je „Z | Excel vrednost | izdvojena adresa”. Za ugovor bez poklapanja upiši po jedan red za svaku različitu originalnu Excel vrednost. Kada nema odgovarajuće Z šifre ili za nju nema neprazne vrednosti u koloni H, označi ugovor kao „Bez Excel vrednosti” (nije mogao biti verifikovan). Prikaži ga posebno u statistici i izostavi iz fajla razlika i iz imenitelja za procenat poklapanja među uporedivim ugovorima. Taj imenilac čine ugovori sa utvrđenom adresom i bar jednom nepraznom Excel adresom za istu šifru. Sortiraj po punom nazivu foldera, zatim po datumu ugovora. U statistici odvojeno prikaži broj foldera, broj ugovora po ishodu i broj redova u fajlu razlika.
