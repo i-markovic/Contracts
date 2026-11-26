@@ -1,0 +1,13 @@
+Odvojivost drugih komponenti BL
+
+Obuhvat je 600 jedinstvenih case_id iz C:\Kontroling\OUT\adresa\evidencija.tsv. Registar C:\Kontroling\IFRS\ugovori\registar_osnovnih_ugovora.csv određuje osnovni dokument. Pregledaj UPLATNA MESTA.2026 i navedi ostale dokumente u dopunskom TSV-u. Pouzdano vezani aneks može promeniti nalaz za period svoje primene. Drugi osnovni ugovor, odluka i pečat mogu objasniti identitet ili kontekst predmeta.
+
+Izvor definicije je prvi list „Najbitniji elementi ugovora“. C18: „Odvojivost ostalih komponenti — da li se druga plaćanja, poput usluga, poreza na imovinu ili osiguranja, mogu bez nesrazmernog napora odvojiti od same zakupnine.“ B18: „(BL) Are non-lease components separable from lease payments? If the lease includes any other payments (e.g. service charges, property tax, insurance etc.), are they separable without undue effort?“ Primeni srpsku formulaciju kada dopunjuje ili menja englesku.
+
+Pronađi zakupninu i druge ugovorene troškove. Zabeleži ko ih snosi, ko ih naplaćuje, da li postoji račun, paušal, merilo potrošnje ili ključ raspodele. Razlikuj plaćanje zakupodavcu od plaćanja dobavljaču i dozvolu prenosa računa od potvrđenog prenosa. Zbirna cena može sadržati grejanje ili vodu, dok zasebna servisna naknada može obuhvatiti nekoliko usluga. Porez na imovinu, porez na zakup i PDV evidentiraju se prema njihovoj ugovornoj ulozi. Obaveza održavanja vlasnika, depozit i ulaganja nisu sami po sebi naplata posebne usluge.
+
+yes znači da ugovor daje osnov za praktično izdvajanje od zakupnine. no zahteva dokaz da postojeća komponenta nije odvojiva bez nesrazmernog napora. NA pokriva nedostupan ili nejasan dokaz o obavezi, obračunu ili izmeni. nije_primenljivo se koristi kada je dokazano odsustvo relevantnih drugih plaćanja. Čuvaj razliku između prisustva komponente i odvojivosti. Iznos BM zahteva svoj dokaz.
+
+Sačuvaj doslovni OCR citat, fizičke redove, član ili stav kad je čitljiv, stranke, predmet i period. U citatu ⏎ predstavlja fizički prelom reda, a ⫽ granicu odvojenog opsega. Citiraj vezu aneksa i utvrdi šta menja. Ako je osnovni OCR nedostupan ili je datum izmene nejasan, prenesi konkretno ograničenje. Odvoji ugovoreni mehanizam od procene potrebnog napora i od stvarnih isplata.
+
+Sačuvaj nalazi_odvojivost.tsv i kontrolni snimak pre čitanja contract-entries. Excel poređenje je zasebna faza. Za BM preuzmi nalaz sa identifikatorom, periodom, komponentama i ograničenjem. Proveri SHA256 iz završne statistike. NA ostaje tekstualni status.

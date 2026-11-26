@@ -15,3 +15,5 @@ JSON je zaseban izvoz iz TSV-a na zahtev.
 | Kraj zakupa | [TSV](instrukcija_za_identifikaciju_datum_kraja_zakupa.txt) | [Verifikacija](instrukcija_za_validaciju_datum_kraja_zakupa.txt) | U | — |
 | Automatsko produženje | [TSV](instrukcija_za_identifikaciju_automatskog_produzenja.txt) | [Verifikacija](instrukcija_za_validaciju_automatskog_produzenja.txt) | V | — |
 | Trajanje produženja | [TSV](instrukcija_za_identifikaciju_trajanja_produzenja.txt) | [Verifikacija](instrukcija_za_validaciju_trajanja_produzenja.txt) | W | — |
+| Dospeće plaćanja | [TSV](instrukcija_za_identifikaciju_dospece.txt) | [Verifikacija](instrukcija_za_validaciju_dospece.txt) | BJ | — |
+| Odvojivost komponenti | [TSV](instrukcija_za_identifikaciju_odvojivosti.txt) | [Verifikacija](instrukcija_za_verifikaciju_odvojivosti_Excel.txt) | BL | — |

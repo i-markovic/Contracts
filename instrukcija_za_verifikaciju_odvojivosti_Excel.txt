@@ -1,0 +1,9 @@
+Excel verifikacija G i BL
+
+Otvori contract-entries nakon što su nalazi iz OCR-a sačuvani. G je Asset cost center, C je External contract no., a BL je Pmt. components separable? Čuvaj izvorni kod i tip ćelije. Posmatrani kodovi su tekstualni Yes, No i „ N/A“ sa vodećim razmakom. Za poređenje koristi yes/no/NA posle trimovanja i normalizacije veličine slova. Prazna ćelija i nepoznat kod zahtevaju zasebnu evidenciju.
+
+Kontekst G obuhvata svaki red istog Z. Kandidati za automate i drugi predmet ostaju vidljivi u inventaru, uz isključenje iz poređenja BL za prostor. Za pouzdanu vezu konkretan C mora da referiše ugovor ili pouzdano vezani aneks u OCR-u. Proveri stranke, adresu odnosno predmet i presek perioda. Prazan C, broj ranijeg ugovora i sličnost adrese ili zakupodavca daju kontekst ili verovatnu vezu. Dokumentovana pilot veza može imati ograničenje na deo Excel perioda.
+
+Poredi yes/no uz primenljiv nalaz. Neuporedivi su nalaz NA, Excel NA, neprimenljivost i nepoznati kodovi. Za svaki nivo navedi imenilac case_id i imenilac parova case_id–Excel red. Obeleži mešovit ishod ako case_id ima i poklapanje i razliku. Verovatne i nepotvrđene veze vodi odvojeno od pouzdanih.
+
+Evidencija ima jedan red po case_id. Dodatna matrica u _radno daje sve parove, kod i razlog veze. TXT u UTF-8 bez zaglavlja sadrži uporedive razlike na pouzdanim vezama, u formatu Z | originalni Excel | nalaz sa periodom gde je ograničen. Proveri citate i kodove ponovnim učitavanjem, a sve imenioce izračunaj iz izlaza. Tek posle provera upiši ZAVRSENO i SHA256 nalaza u statistiku.
