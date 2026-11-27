@@ -1,0 +1,14 @@
+Uputstvo za Excel verifikaciju neodbitnog iznosa (BO)
+
+Referentni izvor
+C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx
+List contract-entries. Red 1: G = Asset cost center (G), BO = Non recoverable amount (BO). Za kontekst proveri A, C, D, E, F, H, Q, U, BI, BN i BP. D je valuta u Excel redu. Vezu te valute sa relevantnim iznosom potvrdi pre poređenja.
+
+1. Posle čuvanja OCR nalaza očitaj samo referencu. Zabeleži izdanje ili SHA-256, list, stvarni broj svakog reda, originalni G i BO, tip ćelije, formulu i poslednju sačuvanu vrednost ako postoje. Čuvaj izvorni niz cifara, uključujući originalnu decimalnu preciznost. Razlikuj praznu ćeliju od numeričke nule. Excel BN, BO i BP ne menjaju OCR preduslov niti OCR nalaz.
+2. Kontekst svih Z kandidata obuhvata svaki originalni Excel red čiji G tačno odgovara Z iz registra, uključujući automat. Ne prenosi podatak sa automata na lokal. Evidentiraj i redove drugih ugovora ili predmeta istog Z.
+3. Primarna mera koristi pouzdano isti ugovor i predmet. Potvrdi C iz teksta osnovnog ugovora ili pouzdano vezanog aneksa i uporedi strane iz E, kategoriju F i predmet iz H sa izvornim odredbama. Q/U, D i BI proveri prema relevantnoj ugovornoj verziji i efektivnom obračunu. Beleži preklapanja, razliku perioda i nedostajuće anekse. Razlikuj pouzdanu atribuciju ugovoru/predmetu od dokazano iste verzije i perioda. Verovatne i nepotvrđene veze služe za kontekst. Kad se više redova odnosi na isti instrument, zadrži svaki original i utvrdi operativnu verziju i period pre poređenja. Oznake COPY i CORRECTION same ne određuju koji BO važi.
+4. U imenilac ulazi slučaj sa OCR BN=no, dokazanim BO i uporedivim Excel iznosom za isti ugovor, predmet, važeću verziju, valutu i BI period. Dokumentuj uporednu preciznost iz dokaza. Čuvaj Excel original i kad je za poređenje opravdano normalizovan. Imenilac je broj uporedivih slučajeva, a brojilac broj potvrđenih poklapanja. Z kontekst prikaži zasebno. Sa imeniteljem 0 prikaži „nema uporedivih”.
+5. U UTF-8 TXT bez zaglavlja stavi samo konačne potvrđene razlike u formatu Z | originalni Excel | nalaz. Identitet reda i dokaz razlike ostaju u evidenciji. Kod NA i isključenog poređenja zadrži razlog u evidenciji. Ponovo učitaj oba TSV i TXT, potvrdi citate prema OCR izvornicima, proveri sve otvorene NA i sporne redove i usaglasi broj fizičkih TXT redova sa statistikom.
+
+Primena na pun skup
+U punom skupu kandidata računaj svaki Excel red jednom u raspodeli, uz mogućnost da bude kontekst za više case_id. Isključi automate, vozila i opremu iz mere ugovora za lokale. Evidentiraj i slučajeve bez Z kandidata. Odvojeno čuvaj dopunske dokumente van 600. Uskladi broj izostavljenih slučajeva po razlogu, brojilac i imenilac i stvarni broj fizičkih redova u TXT.

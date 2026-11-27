@@ -1,0 +1,20 @@
+Uputstvo za identifikaciju neodbitnog iznosa (BO)
+
+Izvor definicije
+C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx
+Prvi list: Najbitniji elementi ugovora
+B21: (BO) If BN is "no": Indicate please the amount, which is irrecoverable per payment period.
+C21: Neodbitni PDV — ako je BN = „no”, unesi iznos PDV-a koji se ne može odbiti za jedan period plaćanja, a ne procenat.
+
+Kada srpsko tumačenje menja ili dopunjava englesko, primeni C21. BO je novčani iznos neodbitnog PDV na zakupninu za jedan period plaćanja iz BI, uz valutu iz dokaza. Procena stope ili procenta ne popunjava BO.
+
+1. U registru identifikuj osnovni ugovor pomoću case_id, Z i putanje. Iz OCR tela potvrdi broj i datum ugovora, ugovorne strane i predmet zakupa. Poveži aneks preko reference na osnovni ugovor i potvrdi strane/predmet i datum primene. Posebno proveri promenu zakupodavca, dela lokala, kućnog broja ili perioda. Ime fajla koristi za pronalaženje dokumenta.
+2. Primeni isključivo finalni OCR BN iz nalazi_pdv.tsv, za isti case_id, Z i osnovni dokument. Uz BN=no označi BO kao primenljiv i pređi na dokaz iznosa. Uz BN=yes označi BO kao neprimenljiv i ostavi iznos prazan. Uz BN=NA, izostalu ili višeznačnu vezu označi uslov kao neutvrđen, BO nalaz kao NA i ostavi iznos prazan. Ponovi proveru mapiranja ako je ulaz nepotpun ili dvosmislen.
+3. Ako je BN=no, utvrdi ugovorni predmet, važeću verziju i period BI iz ugovora i pouzdano vezanih aneksa. Izdvoji izričito dokazan neodbitni PDV za taj period. Ako vezani račun ili obračun računovodstva utvrđuje ukupan i odbitni PDV na istu zakupninu, na istoj osnovi, u istoj valuti i za isti period, razlika ta dva dokumentovana iznosa daje BO. Ako pouzdani dokaz potvrđuje ceo neodbitni deo i način obračuna, može se koristiti i dokumentovani obračun tog dela. BP može nositi objašnjenje postupka. Ugovorena stopa PDV, bruto/neto zakupnina, porez na zakup, svojstvo fizičkog lica i delatnost sami ne dokazuju neodbitni PDV. Poresku stopu ili pravo na odbitak ne izvodi iz opšteg znanja.
+4. Iznos mora pokrivati tačno jedan BI period. Saberi dokumentovane delove istog perioda i iste valute samo uz dokaz da su svi delovi obuhvaćeni i da se međusobno ne preklapaju. Promene iznosa ili učestalosti evidentiraj po datumima važenja. Traži dopunu za nepotpun obračun, promenu valute, nerešen period ili konflikt. Ostavi iznos prazan i označi BO kao NA uz primenljiv BN=no dok iznos nije utvrđen. Eksplicitno dokumentovana nula zahteva proveru usklađenosti sa BN=no i periodom pre upisa.
+5. Za svaku odluku sačuvaj izvor BN, putanju OCR ugovora/aneksa, član, stranu i TXT redove, doslovan citat, dokaz identiteta/predmeta, datume važenja, dokaz BI, račun/obračun i elemente izračuna ako postoje. Znakovi \n u TSV označavaju prelome reda u citatu. Zaključi i sačuvaj OCR nalaze pre čitanja contract-entries. Naknadni nalaz izvodi samo iz novih ili ispravljenih primarnih dokaza uz zabeležen trag izmene.
+
+Primena na pun skup
+U punom skupu koristi tačno 600 case_id iz C:\Kontroling\OUT\adresa\evidencija.tsv i finalni OCR BN iz C:\Kontroling\OUT\pdv_svi_lokali\nalazi_pdv.tsv. Potvrdi dovršenost BN statistike, SHA-256 i odnos case_id / Z / osnovni OCR pre početka.
+Ako nedostaje osnovni OCR, sačuvaj citat, putanju i domašaj povezanog akta. Uslov za BO važi samo kada je dokazani BN=no pripisan upravo tom ugovoru, predmetu i periodu. Prateći akt bez samostalnog osnovnog BN ostaje u dopunskoj evidenciji.
+Pročitaj ceo OCR korpus i odvojeno evidentiraj dopunske ugovore, duplikate i prateće akte van spiska. Preuzmi pilot nalaze samo uz isti izvor, sadržaj i pravila. Očuvaj primarni imenilac od 600 slučajeva.

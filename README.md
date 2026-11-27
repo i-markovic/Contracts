@@ -18,3 +18,9 @@ JSON je zaseban izvoz iz TSV-a na zahtev.
 | Dospeće plaćanja | [TSV](instrukcija_za_identifikaciju_dospece.txt) | [Verifikacija](instrukcija_za_validaciju_dospece.txt) | BJ | — |
 | Odvojivost komponenti | [TSV](instrukcija_za_identifikaciju_odvojivosti.txt) | [Verifikacija](instrukcija_za_verifikaciju_odvojivosti_Excel.txt) | BL | — |
 | Učestalost plaćanja | [TSV](instrukcija_za_identifikaciju_ucestalosti.txt) | [Verifikacija](instrukcija_za_validaciju_ucestalosti.txt) | BI | — |
+| Neodbitni iznos | [TSV](instrukcija_za_identifikaciju_neodbitnog_iznosa.txt) | [Verifikacija](instrukcija_za_verifikaciju_neodbitnog_iznosa_Excel.txt) | BO | — |
+| Fiksna zakupnina | [TSV](instrukcija_za_identifikaciju_fiksne_zakupnine.txt) | [Verifikacija](instrukcija_za_verifikaciju_fiksne_zakupnine_Excel.txt) | BQ | — |
+| Osnova varijabilne zakupnine | [TSV](instrukcija_za_identifikaciju_osnove_varijabilne.txt) | [Verifikacija](instrukcija_za_verifikaciju_osnove_varijabilne_Excel.txt) | BT | — |
+| Varijabilna zakupnina | [TSV](instrukcija_za_identifikaciju_varijabilnog_iznosa.txt) | [Verifikacija](instrukcija_za_excel_verifikaciju_varijabilnog_iznosa.txt) | BU | — |
+| Opis indeksa | [TSV](instrukcija_za_identifikaciju_opisa_indeksa.txt) | [Verifikacija](instrukcija_za_excel_verifikaciju_opisa_indeksa.txt) | BV | — |
+| Učestalost indeksacije | [TSV](instrukcija_za_identifikaciju_ucestalosti_indeksacije.txt) | [Verifikacija](instrukcija_za_excel_verifikaciju_ucestalosti_indeksacije.txt) | BW | — |
