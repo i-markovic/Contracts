@@ -1,5 +1,39 @@
 Izvoz polja Zakupodavac u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Primeni ovu instrukciju samo kada je izričito zatražen JSON izvoz. Podrazumevani izlaz osnovne obrade je TSV. Pravila detekcije zakupodavca i Excel verifikacije ostaju u postojećim instrukcijama. Za izvoz koristi već izdvojene nalaze sa završnim korekcijama i obnovljenim zavisnostima.
 
-Ulaz je nalazi_zakupodavca.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "Zakupodavac". Izlazni fajl nazovi zakupodavac.json.
+1. Ulaz i obuhvat
+
+Učitaj registar C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Njegovi redovi određuju obuhvat i redosled. Preuzmi svaki postojeći case_id doslovno kao tekst, bez prenumeracije. Uključi svaki ugovor, bez obzira na primenljivost ili ishod Excel verifikacije. Više ugovora za isti cost_center vodi zasebno. Broj redova utvrdi iz registra za konkretan izvoz.
+
+Nalaze učitaj iz poslednje primarne evidencije C:\Kontroling\OUT\zakupodavac\evidencija.tsv kao UTF-8 tabelu sa tabulatorom kao graničnikom. Za povezivanje koristi kolone „Z“, „OCR ugovora“ i „case_id“. Za slučajeve bez osnovnog OCR-a koristi i „Datum ugovora“ i „Izvor identifikacije“. Konačna vrednost je u koloni „Zakupodavac“. Kolone „Excel poklapanje“ i „Poređenje“ služe samo za validaciju.
+
+2. Povezivanje svakog registarskog reda
+
+Za popunjen path_to_file pronađi red TSV-a čija „Z“ odgovara cost_center i čija „OCR ugovora“, razrešena u odnosu na C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026, daje istu punu Windows putanju. Proveri da postoji tačno jedan takav red i da se njegov case_id poklapa sa registarskim.
+
+Za šest zapisa bez osnovnog OCR-a učitaj C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Za registarski case_id uzmi datum_osnovnog_ugovora, path_to_evidence, redovi i citat. U istoj Z šifri potvrdi odgovarajući TSV red preko datuma ugovora i pune putanje „Izvor identifikacije“ do potvrdnog dokumenta. Proveri case_id i vezu citiranog odlomka sa tim osnovnim ugovorom. Isti aneks može dokazivati više ugovora različitih datuma. Prazan path_to_file i sama Z šifra nisu jedinstveni ključevi.
+
+Ako veza nedostaje, više redova odgovara istom zapisu ili se oznake razilaze, prijavi koordinatoru konkretne case_id, šifru i sporne putanje ili datume. Sačekaj razrešenje pre konačnog izvoza. Oznaka „NA“ odnosi se na nalaz detekcije, a ne na neuspešno povezivanje.
+
+3. Mapiranje vrednosti
+
+U value prenesi konačan dokumentovani nalaz iz „Zakupodavac“. Prenesi sve potvrđene zakupodavce u jednom tekstu, sa nazivima, redosledom, razdvajanjem i dijakriticima iz evidencije. Kod više lica zadrži zareze i veznik „i“ iz konačnog nalaza. Izvoz ne prerađuje nazive i ne dopunjava ih iz Excela.
+
+Prema detekciji, ako se svi zakupodavci ne mogu pouzdano utvrditi, ceo nalaz je tekst „NA“. Postojeći „NA“ prenesi kao "NA". Za ovo polje nema namerno prazne vrednosti niti posebne oznake za neprimenljivost. Ako je ćelija prazna, proveri konačan nalaz povezanog ugovora u poslednjoj evidenciji sa korekcijama. Ako je nalaz neutvrđen, upiši "NA". Svaki value mora biti tekst. Nemoj upisivati null, broj, prazan tekst ili proizvoljnu zamenu.
+
+4. Format i odredište
+
+Sačuvaj samo zakupodavac.json na putanji C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\zakupodavac.json. Registar, prethodne instrukcije, rezultate u OUT, repozitorijum i tuđe fajlove ostavi netaknute. Koristi JSON serijalizator i UTF-8. Korenski element je niz u redosledu registra. Za svaki case_id upiši tačno jedan objekat sa ključevima case_id, field i value. Sve tri vrednosti su tekst. field je tačno "Zakupodavac". Navodnike, obrnute kose crte i kontrolne znakove kodiraj prema JSON pravilima tako da se čitanjem vrati izvorni tekst.
+
+Primer ispravnog JSON niza sa jednim zapisom
+
+[
+  {"case_id":"Z0002-20220615-01","field":"Zakupodavac","value":"Predrag Bojadžijevski"}
+]
+
+5. Provera sačuvanog fajla i izveštaj
+
+Ponovo otvori stvarno sačuvani fajl kao UTF-8 i parsiraj JSON. Proveri da je korenski element niz i da je broj objekata jednak broju redova učitanog registra. Proveri jedinstvenost case_id u registru i izlazu, jednak skup i identičan redosled oznaka. Svaki objekat mora imati tačno tri propisana ključa, sve tri vrednosti tekstualnog tipa i field tačno "Zakupodavac". Uporedi svaku ponovo učitanu vrednost sa očekivanim tekstom iz povezanog reda posle mapiranja. Broj praznih tekstova mora biti nula.
+
+Po uspešnoj proveri navedi punu izlaznu putanju, izvor poslednje evidencije, broj zapisa i broj objekata čiji je value tačno "NA". Broj namernih praznih vrednosti za Zakupodavac je nula.

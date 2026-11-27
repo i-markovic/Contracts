@@ -1,0 +1,41 @@
+Izvoz polja „Odvojivost komponenti“ (BL) u JSON
+
+Ovu samostalnu instrukciju primeni kada je JSON izvoz izričito zatražen. Podrazumevani izlaz osnovne obrade ostaje TSV. Instrukcija uređuje samo izvoz postojećeg nalaza. Detekcija i Excel verifikacija zadržavaju svoja postojeća pravila.
+
+1. Odredi obuhvat i redosled
+
+Autoritativni spisak i redosled ugovora daje C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Čitaj CSV parserom i preuzmi svaki postojeći case_id kao tekst, bez renumeracije. Uključi svaki zapis iz registra, bez obzira na primenljivost ili ishod Excel verifikacije. Više ugovora istog cost_center ostaju zasebni zapisi.
+
+Za svaki red sa putanjom poveži par cost_center i path_to_file iz registra sa kolonama Z i osnovni_ocr u konačnim BL nalazima. Kod poređenja putanja uzmi u obzir Windows pravila za velika i mala slova i zapis separatora. Proveri da je upareni case_id tačno onaj iz registra. Proveri da su identifikatori jedinstveni i da svaki red registra ima jedan odgovarajući nalaz. Ako veza ostane dvosmislena, ako nedostaje red ili ako se identifikatori razlikuju, prijavi koordinatoru konkretne case_id, putanje i konkurentne nalaze. Sačekaj razrešenje pre konačnog izvoza.
+
+Za šest ugovora bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Upari postojeći case_id, proveri datum iz datum_osnovnog_ugovora i pripadnost dokumenta odgovarajućem cost_center, pa proveri citat u redovima redovi dokumenta path_to_evidence. Povezivanje potvrđuje identitet ugovora. Prazan path_to_file i sama Z oznaka nisu jedinstveni ključevi. Potvrdni dokument može biti zajednički za više ugovora, pa proveri datum i citat za svaki case_id posebno.
+
+2. Preuzmi vrednost BL
+
+Koristi poslednji završeni skup, zajedno sa naknadnim korekcijama ili obnovljenim zavisnostima ako su objavljene. Za ovaj skup izvor je C:\Kontroling\OUT\odvojivost_svi_lokali\nalazi_odvojivost.tsv. U njemu su case_id, Z i osnovni_ocr identifikatori, a merodavni_nalaz je kolona iz koje je preuzet value. Proveri njenu saglasnost sa kolonom nalaz. Kolona prvobitni_nalaz čuva početni režim.
+
+Uporedi zaključak sa kolonom nalaz po case_id u C:\Kontroling\OUT\odvojivost_svi_lokali\evidencija_odvojivost.tsv. Ako se razlikuju, utvrdi koja je završna korekcija merodavna pre izvoza. Kolone kontekst_ishod, pouzdano_ishod i svi_G_kandidati služe Excel proveri. Izvor vrednosti je konačan nalaz iz dokumentacije prema postojećoj BL detekciji. Ako se završni skup isporučuje sa statusom ZAVRSENO i kontrolnim SHA256 u statistika.md, proveri da taj SHA256 odgovara stvarnom TSV-u koji čitaš. Koristi hash odgovarajuće serije.
+
+Mapiranje za value:
+- yes → "yes" za dokumentovanu odvojivost.
+- no → "no" za dokumentovanu neodvojivost.
+- nije_primenljivo → "nije_primenljivo" kada konačan nalaz potvrđuje odsustvo relevantnih drugih plaćanja.
+- NA ili prazna vrednost koja znači da konačan nalaz nije utvrđen → "NA".
+
+Kolona primenljivost daje kontekst, a value dolazi iz konačnog nalaza. Na primer, primenljiv ugovor i dalje može imati BL = "NA" zbog nedovoljnog dokaza o odvojivosti. U ovom polju nema namerno praznog konačnog ishoda. Nedostajući red, konflikt nalaza ili nepoznat kod zahtevaju razrešenje, kao i dvosmisleno uparivanje. Sačuvaj sve potvrđene delove vrednosti, tačan zapis i dijakritike. Koristi tekstualne kodove, uključujući baš "NA" za neutvrđen ishod, bez null, nule ili proizvoljne zamene.
+
+3. Sačuvaj i proveri JSON
+
+Tačno ime polja field je „Odvojivost komponenti“. Tačno ime izlaznog fajla je odvojivost_komponenti.json. Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\odvojivost_komponenti.json.
+
+Serializuj niz kao UTF-8 standardnim JSON serializerom sa ispravnim escape-ovanjem navodnika, obrnute kose crte i kontrolnih znakova. Sačuvaj dijakritike u UTF-8. Zadrži redosled CSV registra i upiši po jedan objekat za svaki case_id. Svaki objekat ima tačno ključeve case_id, field i value. Sve tri vrednosti su tekstualne.
+
+Primer validnog JSON niza:
+[
+  {"case_id": "Z0002-20220615-01", "field": "Odvojivost komponenti", "value": "yes"},
+  {"case_id": "Z0003-20190819-01", "field": "Odvojivost komponenti", "value": "NA"}
+]
+
+Ponovo učitaj stvarno sačuvan fajl sa diska UTF-8 dekoderom i JSON parserom. Proveri da je koren niz, da je broj objekata jednak broju podataka u aktuelnom registru i da su skup, jedinstvenost i redosled case_id isti kao u registru. Proveri tačno tri ključa, tekstualne tipove, tačan field u svakom objektu i jednakost učitanog value sa očekivanim mapiranjem. Time proveravaš i da je escape-ovanje očuvalo sadržaj. Upiši samo zatraženi JSON fajl ovog polja. Registar, izvorne nalaze, prethodne instrukcije, tuđe fajlove i repo koristi bez izmena.
+
+U završnom izveštaju navedi punu putanju JSON-a, broj zapisa, broj vrednosti koje su tačno tekst "NA", broj namerno praznih vrednosti ako postoje i putanju korišćene završne evidencije.

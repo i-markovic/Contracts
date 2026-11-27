@@ -1,0 +1,17 @@
+Iznos ostalih komponenti ugovora, BM
+
+Merodavan je list „Najbitniji elementi ugovora“, B19/C19, iz radne sveske ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis). Doslovni tekst je u definicija_B19_C19.txt. Srpski tekst ima prednost kada dopunjuje ili menja engleski.
+
+Primarni skup je tačno 600 case_id iz OUT\adresa\evidencija.tsv. Upariti ga sa registrom, konačnim BL i BI nalazima po case_id. Pregledati svih 382 OCR foldera. Dokumente van primarnog skupa evidentirati zasebno. Njihov samostalan BM zahteva sopstveni završni BL. Povezani aneks koristiti unutar glavnog skupa samo kada njegov sadržaj identifikuje konkretan osnovni instrument, strane i predmet. Proveriti redosled primene i kasnije izmene.
+
+BM se izvodi samo kada završni OCR nalaz u OUT\odvojivost_svi_lokali\nalazi_odvojivost.tsv ima yes/DA za konkretni case_id. Proveriti završnu statistiku, jednakost skupa od 600 case_id i stabilan SHA-256 TSV-a i statistike. Za BL=NA evidentirati NA_BL. Za BL=NE ili neprimenljiv voditi odgovarajuće zasebne statuse.
+
+Ugovorni BM je zbir tekućih izdvojenih naknada za isti period koji BI dokazuje. Uzmi BI iz OUT\ucestalost_svi_lokali\nalazi_ucestalost.tsv i priloži OCR odredbu o periodu. Razdvojiti period iznosa od dospeća i ritma uplate. Za istorijski ugovor posmatrati poslednji dokazani režim tog instrumenta. Navesti datum primene iz akta i sva relevantna ograničenja.
+
+Navesti putanju i SHA-256 dokumenta, doslovni OCR citat, član ili tačku, fizičke redove od 1, identitet i predmet, dokaz i ograničenje. Odvojiti izričit dokaz obaveze i iznosa od izvedenog zaključka. OCR oznake nečitljivosti i prelome sačuvati. Pečatni OCR služi identifikaciji broja ugovora.
+
+Potrošnja bez računa, nepoznat paušal, nepoznate tarife ili iznos samo jedne među više relevantnih komponenti daju NA. Posebno dokumentovati istorijske iznose, promenjene ili ukinute paušale, jednokratne refundacije, dugove i odbitke od zakupnine. Trošak održavanja o sopstvenom trošku proceniti prema izričitoj ugovornoj obavezi i proveriti da li predstavlja periodičnu naknadu. Iznos zakupnine, PDV, depozit i sredstva obezbeđenja proveriti prema njihovoj stvarnoj nameni u dokumentu.
+
+Za dokazani zbir navesti valutu komponenti i valutu zakupnine. Razliku valuta upisati u napomenu. Dinarnu protivvrednost razlikovati od ugovorne valute zakupnine. Ukupan iznos u različitim valutama izvoditi samo uz dokaziv ugovoreni način preračuna za isti period.
+
+Sačuvati konačni nalazi_ostale_komponente.tsv i SHA-256 pre čitanja contract-entries. Nakon završetka ponovo učitati sve izlaze, proveriti citate, ponovo pregledati NA i razlike i proveriti 600 jedinstvenih case_id.

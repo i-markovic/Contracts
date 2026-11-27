@@ -1,0 +1,2 @@
+B19 (BM) If BL = "yes": Mention the current total amount of non-lease components per payment period (as choosen in BI). If the payment for non-lease components is a different currency from the lease, please mention it in the additional comments.
+C19 Iznos komponenti koje nisu zakup — ako je BL = „yes”, unesi njihov ukupan tekući iznos po periodu plaćanja iz BI. Ako su u drugoj valuti od zakupnine, navedi tu valutu u dodatnim napomenama.

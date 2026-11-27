@@ -1,0 +1,38 @@
+ODBITNOST PDV-A — BN; instrukcija za izdvajanje entiteta iz OCR dokumentacije
+Primarni skup obuhvata 600 case_id iz C:\Kontroling\OUT\adresa\evidencija.tsv. Registar daje putanju do osnovnog OCR-a. Pregled obuhvata svih 382 foldera korpusa.
+Korpus: C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026.
+
+Definicija je pročitana iz prvog lista „Najbitniji elementi ugovora” radne sveske:
+C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx
+
+B20, doslovno:
+(BN) Is the VAT, which is related to the lease payments, fully recoverable (in the sense of deductable)? If VAT is recoverable just partially, please answer "No" and provide the information as required in column BP. In case no VAT is applicable at all, please answer "yes" (the effect whether there is no VAT or it is fully recoverable is the same for IFRS 16 purposes).
+
+C20, doslovno, srpski opis ima prednost kada dopunjuje ili menja engleski:
+Odbitnost PDV-a — prema izvornom uputstvu označi da li je PDV na zakupninu u celosti odbitni. Ako je samo delimično odbitni, izaberi „No” i dopuni izvorno polje BP. Ako PDV uopšte nije primenljiv, uputstvo nalaže „yes”, jer se za potrebe ovog IFRS 16 obrasca tretira kao potpuno odbitni PDV.
+
+Obuhvat i redosled
+1. Jedan case_id predstavlja jedan osnovni ugovor; zadrži originalni identifikator registra i kada datum u njemu nije početak zakupa. Registar određuje populaciju, ne dokazuje sadržaj ugovora.
+2. Najpre čitaj telo osnovnog OCR ugovora. Utvrdi strane, njihovu ulogu, predmet, adresu/parcelu/deo prostora i operativni period. Naziv fajla, datum zavođenja i naziv foldera nisu zamena za telo dokumenta.
+3. Pregledaj anekse iz istog foldera, ali ih pripiši ugovoru samo po izričitoj referenci na osnovni broj/datum i isti predmet i strane ili dokumentovan pravni sled. Sama lokacija u folderu ili ista adresa nije dokaz veze. Evidentiraj neusaglašene reference; ne prenositi anekse na drugi osnovni ugovor.
+4. Odluka o radnom vremenu nije dokaz odbitnosti. Poseban zakup automata nije dokaz PDV statusa zakupa lokala. Glavni zakup GALEB/GALEB nije automatski dokaz odnosa ZBET podzakupa.
+5. Sačuvaj nalazi_pdv.tsv pre otvaranja contract-entries. Excel BN, BO i BP ne učestvuju u ovoj fazi. Ne traži pravne norme i ne zaključuj iz delatnosti, pravne forme ili sopstvenog poreskog znanja.
+
+Ishod i dokaz
+• yes: dokument pouzdano i za predmetni period potvrđuje potpunu odbitnost; zasebno označi primenljivost_PDV=primenljiv. Takođe yes kada pouzdano potvrđuje da PDV uopšte nije primenljiv; primenljivost označi neprimenljiv, nikada ne poredi kao grešku samo zbog te oznake.
+• no: dokument potvrđuje delimičnu ili nikakvu odbitnost. U BP napomeni navedi doslovni osnov i dokazani procenat/iznos/metod; ako kvantifikacija nedostaje, izričito zabeleži nedostatak. Ne izmišljaj iznos.
+• NA: ugovor i pouzdano vezani aneksi ne dokazuju jedan od prethodnih statusa. Navedi konkretan razlog i računovodstveni podatak koji nedostaje. NA je nedostatak dokaza, nije numeric 0, nije neodbitnost niti neprimenljivost PDV.
+
+„Plus PDV”, „uvećano za PDV”, iznos/stopa PDV i faktura jesu izričit dokaz ugovorenog obračuna, ali nisu dokaz prava zakupca na odbitak. Odvojiti obračun i odbitnost. Formulacija „bez PDV-a” uz cenu može biti neto osnovica: bez dodatnog razjašnjenja nije pouzdana potvrda neprimenljivosti. Porez na zakup ili porez na imovinu nisu isto što i PDV. Fizičko lice i odsustvo pominjanja PDV ne dokazuju neprimenljivost. Period bez plaćanja zakupnine ne dokazuje trajni PDV status.
+
+Za NA je potreban računovodstveni dokaz za isto pravno lice zakupca, isti ugovor/predmet i period: potvrda primenljivosti PDV, dokumentovana neprimenljivost ili procenat/iznos odbitnog i neodbitnog prethodnog PDV uz evidenciju ulaznih računa. Sam račun sa PDV nije dovoljan dokaz odbitnosti.
+
+Evidentiranje
+Jedan fizički TSV red po case_id. UTF-8, tabulator kao separator. Sačuvaj doslovne OCR citate bez ispravljanja grešaka; prelome redova kodiraj kao dva znaka \n. Pri čitanju ih dekodiraj u stvarne prelome. Navedi član/tačku i 1-based TXT redove, uključujući prazne redove i oznake stranica. Za svaki citat čuvaj izvorni put. Citat odsutnog statusa ne postoji: citiraj relevantnu odredbu o zakupnini i objasni šta ona ne dokazuje.
+Čuvaj odvojene kolone za izričit/posredan dokaz, obračun PDV, status odbitnosti, period, ograničenje i potrebnu dopunu. Kod više perioda sa različitim dokazanim BN ishodom ne forsiraj jedan yes/no bez vremenske segmentacije; ostavi NA uz objašnjenje i sve periode.
+
+Ponovna kontrola
+Ponovo pročitaj sve NA i sve razlike; proveri i anekse, negativne formulacije, granice perioda, prethodne/nove zakupodavce i predmet. Svi izvori ostaju neizmenjeni. Završne TSV datoteke učitaj i proveri 600 jedinstvenih case_id bez gubitka redova, svaki citat prema izvornim redovima i raspodelu ishoda. Ne koristi JSON.
+
+Primena na ceo skup
+Skup od 600 je zatvoren. Dopunske ugovore, duplikate i prateće akte evidentiraj u dopunski_pdv.tsv. Prenesi 67 nalaza iz pilota uz proveru SHA-256 osnovnih ugovora i aneksa. Ako osnovni OCR nedostaje, navedi to i koristi samo ono što pozvani akt stvarno potvrđuje. Datum zaključenja, početak zakupa i datum dejstva aneksa čuvaj odvojeno. Ako je neprimenljivost izričito navedena u odredbi zakupnine za konkretnog zakupodavca i predmet, primeni yes prema C20 za dokumentovani odnos. Kod više strana ili različitih obračuna jasno navedi ograničenje na određeni deo ili period.

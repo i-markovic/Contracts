@@ -1,5 +1,45 @@
-Izvoz polja pocetak zakupa u JSON
+Izvoz polja „Početak zakupa” u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Primeni ovu zasebnu instrukciju samo kada je izričito zatražen JSON izvoz. Podrazumevani izlaz osnovne obrade je TSV. Detekciju i Excel verifikaciju sprovodi prema njihovim postojećim instrukcijama.
 
-Ulaz je nalazi_datum_pocetka_zakupa.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "pocetak zakupa". Izlazni fajl nazovi datum_pocetka_zakupa.json.
+1. Ulazi i obuhvat
+
+Autoritativni spisak ugovora i redosled zapisa učitaj iz:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+
+Poslednju završnu evidenciju polja učitaj iz:
+C:\Kontroling\OUT\pocetak_svi_lokali\evidencija_datum_pocetka_zakupa.tsv
+
+Koristi završnu verziju evidencije sa svim korekcijama i obnovljenim vezama ka dokazima. Čitaj CSV i TSV kao tabele sa zaglavljem i podrškom za citirana polja. Za izvoz koristi isključivo ugovore iz registra. Svaki njegov red obradi jednom, uključujući sve ugovore iste Z šifre, bez filtriranja po ishodu Excel validacije ili primenljivosti. Broj zapisa odredi iz aktuelnog registra.
+
+2. Povezivanje sa dokazom
+
+Za neprazan path_to_file pronađi red TSV-a u kojem Z odgovara registarskom cost_center, a osnovni_OCR, razrešen prema korenu C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026, označava isti fajl kao path_to_file. Uporedi normalizovane Windows putanje. Proveri da case_id povezanog reda odgovara registru. Preuzmi postojeći case_id iz registra kao tekst i sačuvaj ga doslovno, sa vodećim nulama i nastavkom oznake.
+
+Za šest ugovora bez osnovnog OCR-a koristi:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+
+Pronađi potvrdu po case_id. Uporedi cost_center sa Z, datum_osnovnog_ugovora sa datum_zakljucenja i path_to_evidence sa odgovarajućom putanjom iz dopunski_OCR. Proveri označene redove i citat u potvrdnom dokumentu, naročito kada isti aneks pominje više osnovnih ugovora. Prazna putanja može se ponavljati, kao i Z šifra. Za svaki registarski red zahtevaj jednu potvrđenu vezu. Ako veza nedostaje ili je dvosmislena, prijavi koordinatoru konkretne case_id, šifre, putanje i sporne kandidate i sačekaj razrešenje pre konačnog izvoza.
+
+3. Mapiranje nalaza
+
+U svaki objekat upiši field tačno kao „Početak zakupa”. Za value preuzmi isključivo konačnu vrednost iz kolone nalaz povezanog reda završnog TSV-a. To je prvi dan ugovorenog perioda zakupa ili podzakupa prema dokumentovanom nalazu. Potvrđeni datum i datum koji je u TSV-u označen kao „Procena” prenesi u obliku DD.MM.GGGG. Status procene, datum preseka, osnov procene, lokator, dokaz i napomena ostaju u TSV-u. Kolone ishod, Q_prikaz, Q_datumi i redovi_poklapanja služe Excel validaciji i ne određuju value.
+
+Ako je nalaz neutvrđen, upiši doslovni tekst "NA". Za ovo polje ne postoji namerno prazna vrednost. I zakup na neodređeno može imati utvrđen početak. Ako je ćelija nalaz prazna ili ima neočekivan format, proveri poslednju evidenciju i napomenu: za dokumentovano neutvrđen početak upiši "NA", a nerazjašnjenu nedoslednost prijavi pre izvoza. Ne izvodi novi datum niti zamenu iz Excel vrednosti, datuma zaključenja ili naziva fajla. Sačuvaj sve potvrđene delove vrednosti i dijakritike. Sve tri vrednosti moraju biti tekstualne, uključujući "NA".
+
+4. Format i odredište
+
+Izlazni fajl je pocetak_zakupa.json. Puna putanja je:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\pocetak_zakupa.json
+
+Sačuvaj UTF-8 JSON niz redosledom redova registra. Za svaki case_id upiši jedan objekat sa tačno tri ključa: case_id, field, value. Koristi standardni JSON serijalizator koji ispravno kodira navodnike, obrnute kose crte i kontrolne znakove. Primer ispravnog niza:
+
+[
+  {"case_id":"Z0002-20220615-01","field":"Početak zakupa","value":"15.06.2022"}
+]
+
+5. Provera i predaja
+
+Ponovo otvori stvarno sačuvani fajl kao UTF-8 i parsiraj ga kao JSON. Proveri da je broj objekata jednak broju redova registra, da su oznake jedinstvene i da su njihov skup i ceo niz case_id identični registru. Za svaki objekat proveri tačan skup od tri propisana ključa, tekstualni tip sve tri vrednosti, doslovan naziv polja i jednakost value sa mapiranim nalazom. Svaki utvrđeni datum mora biti kalendarski ispravan i imati propisani format. Prihvati samo tačan tekst "NA" za neutvrđenu vrednost, bez null, brojeva ili praznih stringova.
+
+U završnom izveštaju navedi punu putanju JSON-a, broj zapisa, broj vrednosti koje su tačno "NA" i putanju korišćene završne evidencije. Broj namerno praznih vrednosti za ovo polje je nula. Pri izvozu piši samo fajl svog polja. Ne menjaj registar, evidencije, postojeće instrukcije, repo ili tuđe fajlove.

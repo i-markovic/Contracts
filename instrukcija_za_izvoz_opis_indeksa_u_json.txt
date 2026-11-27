@@ -1,0 +1,44 @@
+Izvoz polja „Opis indeksa“ u JSON
+
+Ovu instrukciju primeni kada je izričito zatražen JSON izvoz postojećeg nalaza za kolonu BV. Podrazumevani izlaz osnovne obrade je TSV. Detekcija iz dokumentacije i Excel verifikacija sprovode se po svojim postojećim instrukcijama.
+
+1. Odredi ulaze i izlaz
+
+   Vrednost ključa field je tačno „Opis indeksa“.
+   Ime izlaznog fajla je opis_indeksa.json.
+   Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\opis_indeksa.json.
+   Autoritativan spisak i redosled ugovora daje C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Broj zapisa izračunaj iz registra koji važi za konkretan izvoz. Ako je za to izdanje saopšten kontrolni hash, proveri ga pri učitavanju.
+
+2. Upari ugovore sa završenom evidencijom
+
+   Koristi poslednju završenu evidenciju sa svim korekcijama i obnovljenim OCR BT zavisnostima. Za dosadašnji puni skup to su:
+   - C:\Kontroling\OUT\opis_indeksa_svi_lokali\evidencija_opis_indeksa.tsv, kolone case_id, Z, BV_primenljivost, BT_OCR i BV_OCR_opis.
+   - C:\Kontroling\OUT\opis_indeksa_svi_lokali\nalazi_opis_indeksa.tsv, kolone case_id, Z, osnovni_ocr, osnovni_SHA256, BV_primenljivost, BT_OCR i BV_opis.
+
+   Preuzmi case_id iz registra kao tekst i sačuvaj ga bez renumeracije. Za svaki case_id očekuj tačno jedan red u oba TSV-a. Proveri da je cost_center iz registra jednak koloni Z i da path_to_file odgovara osnovni_ocr iz nalaza. Osnovni_ocr je relativan na C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026. Uporedi normalizovane apsolutne putanje. Kad je osnovni_SHA256 zapisan, proveri ga prema tom OCR fajlu. Ugovore za isti cost_center vodi kao odvojene zapise. Ako postoji sukob ili veza nije jednoznačna, prijavi konkretne case_id, putanje i kandidate koordinatoru i sačekaj razrešenje pre upisa konačnog JSON-a.
+
+   Za šest ugovora iz postojećeg obuhvata sa praznim path_to_file koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Upari tačan case_id, potvrdi datum osnovnog ugovora i pripadnost dokumenta odgovarajućem cost_center, pa proveri path_to_evidence, redovi i citat u stvarnom OCR-u. Isti aneks može dokumentovati dve ugovorne verzije. Razlikuj ih po datumu i citiranim redovima. Prazan path_to_file i sama oznaka Z nisu dovoljni kao ključ.
+
+3. Prenesi konačnu vrednost
+
+   Za value kopiraj kolonu BV_OCR_opis iz završne evidencije. Proveri da se slaže sa BV_opis u završnom TSV-u nalaza i da su BV_primenljivost i BT_OCR usaglašeni. Sačuvaj tekst nalaza, dijakritike i sve potvrđene komponente koje kolona sadrži. Prateće kolone faze, nedostajuce i istorijski_ili_neobavezujuci_kontekst ostaju deo evidencije. Primarni Excel ishod, originalni Excel BV i kandidati po Z nisu izvori za value.
+
+   Uključi svaki case_id iz registra. Kada je BV_primenljivost PRIMENLJIVO, uslov za BV dolazi isključivo iz završnog OCR BT nalaza index/rate ili both. Prenesi utvrđeni opis, odnosno tekst „NA“ ako zaključani nalaz nema utvrđenu vrednost. Kada je BV_primenljivost NEPRIMENLJIVO ili USLOV_NEUTVRĐEN, value je tekst „NA“, čak i ako u istorijskom kontekstu ili Excelu postoji neki opis. Kod ovog polja nema namerno praznih vrednosti. Ako je izvorna ćelija prazna, proveri zaključani nalaz. Koristi „NA“ samo kad potvrdiš da vrednost nije utvrđena. Razreši neslaganja kolona pre izvoza. Koristi tekst „NA“ bez zamene vrednostima null, 0 ili praznim tekstom.
+
+4. Sačuvaj i proveri stvarni izlaz
+
+   Sačuvaj UTF-8 JSON niz redosledom iz registra, sa jednim objektom po case_id. Svaki objekat ima tačno ključeve case_id, field, value i sve tri vrednosti su tekst. Koristi JSON serijalizator koji pravilno escape-uje navodnike, obrnutu kosu crtu i kontrolne znakove i zadržava dijakritike.
+
+   Validan primer jednog zapisa u nizu:
+
+[
+  {
+    "case_id": "Z0159-20200401-01",
+    "field": "Opis indeksa",
+    "value": "Prosečna zvanična stopa inflacije evra prema HICP 28 zemalja EU, sve stavke, ili indeksu koji zameni HICP 28. Izvor je poslednji prosečni godišnji indeks koji objavljuje Eurostat."
+  }
+]
+
+   Ponovo učitaj sačuvani fajl JSON parserom. Proveri da je koren niz, broj objekata jednak broju ugovora iz registra, svaki case_id jedinstven i niz case_id potpuno jednak nizu iz registra. Proveri i skup identifikatora, tačno tri propisana ključa bez duplikata, tip i sadržaj field, tekstualne tipove ostalih vrednosti i jednakost svake dekodirane value sa mapiranim nalazom. Time proveravaš i da su dijakritici i escape-ovanje preživeli zapis. Pri izvozu upiši samo opis_indeksa.json. Registre, TSV nalaze, postojeće instrukcije, tuđe fajlove i repo koristi bez izmena.
+
+   U završnom izveštaju navedi punu putanju, broj zapisa, broj tačnih tekstualnih vrednosti „NA“ i putanju korišćene evidencije. Posebno navedi broj namerno praznih vrednosti ako postoje, uz razlog. Za BV ih nema.

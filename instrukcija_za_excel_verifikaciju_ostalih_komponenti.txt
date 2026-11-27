@@ -1,0 +1,13 @@
+Excel provera G i BM za sve lokale
+
+Početi posle zaključavanja ugovornih nalaza BM za svih 600 case_id. Zabeležiti vreme i hash nalaza pre čitanja contract-entries. Originalna sveska služi samo za čitanje.
+
+Proveriti zaglavlja i vrste ćelija. G je centar troška, C je broj instrumenta, BI je period, BL je uslov i BM je iznos. Za valutu proveriti D i CH. Lokalna valuta u CO sama nije dokaz valute BM. Sačuvati doslovne vrednosti, tip, formulu i njen zatečeni rezultat. Utvrditi zatečene kodove i pravila validacije u svesci. Prazna ćelija, nula i tekstualni NA imaju različita značenja.
+
+Za svaki case_id evidentirati sve Excel redove iste G/Z šifre. Automate i druge predmete prikazati u kandidatskom kontekstu i isključiti iz poređenja iznosa za lokal. Pouzdana veza zahteva dokaz broja instrumenta ili pripadajućeg aneksa i istog predmeta iz ugovornih izvora. Zabeležiti nesaglasnosti datuma i identiteta. Izdvojiti verovatne i nepotvrđene veze. Z, datum, adresa i jednak iznos pojedinačno ne uspostavljaju pouzdanu vezu.
+
+Izračunati statistiku za kontekst iste Z šifre i pouzdanu vezu ugovora i predmeta. Prikazati pokrivenost, imenioce po ugovorima i parovima, poklapanja i razlike. Za brojčano utvrđen ugovorni BM voditi dve mere. Prva je razlika originalnih upisanih brojeva. Druga je poređenje BM kao iznosa uz iste primenljive uslove BL, BI i valute. Konflikt u Excel BL označiti posebno. Iznosi NA, NA_BL i neprimenljivi OCR ishodi nemaju brojčani par.
+
+U TXT izvesti razlike zatečenih brojeva za dokazani primenljivi OCR BM, bez zaglavlja, u formatu Z | originalni Excel | nalaz. U evidenciji prikazati zašto brojčana razlika može biti neuporediva kao uslovni BM. Evidencija ima jedan red po case_id, a detalji po paru služe proveri.
+
+Ponovo učitati glavne izlaze, proveriti 600 jedinstvenih case_id, citate i vrednosti, sve NA i razlike, TXT redove i kontrolne hash-eve. Brojčani pokazatelj bez uporedivih slučajeva ima stopu NA.

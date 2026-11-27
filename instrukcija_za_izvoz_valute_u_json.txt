@@ -1,5 +1,39 @@
-Izvoz polja valuta u JSON
+Izvoz polja „Valuta ugovora“ u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Ovu instrukciju primeni samo kada je JSON izvoz izričito zatražen. Podrazumevani izlaz osnovne obrade ostaje TSV. Postupak izvoza preuzima završene nalaze prema postojećoj instrukciji detekcije i ne menja detekciju ni Excel verifikaciju.
 
-Ulaz je nalazi_valute.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "valuta". Izlazni fajl nazovi valuta.json.
+1. Odredi obuhvat i izvor
+
+Učitaj autoritativni registar C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Broj zapisa i njihov redosled odredi iz učitanog registra. Preuzmi postojeći case_id kao tekst, bez promene, sortiranja ili renumeracije. Više ugovora sa istim cost_center zadrži odvojeno. Dopunske ugovore van registra izostavi.
+
+Učitaj poslednju finalnu evidenciju polja C:\Kontroling\OUT\valuta_svi_lokali\evidencija_valute.tsv, sa svim završnim korekcijama i obnovljenim zavisnostima. Koristi čitač UTF-8 TSV-a koji podržava citirana višeredna polja. Za povezivanje čitaj case_id, Z, identitet i osnovni_OCR. Za proveru izvora dostupni su izvor, citat i dokazni_trag. Vrednost za izvoz je u koloni nalaz.
+
+2. Potvrdi identitet ugovora
+
+Za svaki case_id iz registra pronađi jedan red evidencije. Proveri da cost_center odgovara koloni Z sa vodećim nulama. Uporedi path_to_file sa putanjom osnovni_OCR razrešenom u odnosu na koren C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026.
+
+Za šest ugovora bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. To su Z0255-20200305-01, Z0374-20151121-01, Z0379-20200601-01, Z0447-20160201-01, Z0518-20151001-01 i Z0518-20240901-01. Poveži case_id i datum_osnovnog_ugovora sa identitetom ugovora, proveri Z i potvrdi vezu dokumentom path_to_evidence, navedenim redovima i citatom. Dva ugovora u Topoli dele Z i potvrdni dokument. Razlikuju ih case_id i datum ugovora. Prazna putanja i sama Z šifra nisu jedinstveni ključevi.
+
+Ako red nedostaje, ima više kandidata ili su podaci o identitetu protivrečni, prijavi koordinatoru konkretne case_id, Z šifre, putanje i razlog neizvesnosti. Sačekaj razrešenje pre konačnog izvoza. Nedostatak veze nije nalaz „NA“.
+
+3. Popuni value
+
+Uključi svaki ugovor iz registra, bez obzira na ishod Excel validacije ili primenljivost. Za potvrđen ugovor prenesi tekst iz nalaz. To je međunarodna oznaka valute u kojoj je denominovana zakupnina, sa primenjenim pripadajućim aneksima do datuma preseka. Na primer, kod ugovorene zakupnine u EUR koja se plaća u dinarskoj protivvrednosti prenesi potvrđeni nalaz „EUR“. Kolona prvobitna_valuta dokumentuje ranije stanje. Kolone buduca_promena, ishod i excel_D_originali imaju druge namene i ne koriste se za value. Sačuvaj sve potvrđene delove izvorne vrednosti i dijakritike.
+
+Kada je nalaz neutvrđen, upiši tačan tekst "NA". Za valutu ugovora nema namerno prazne vrednosti. Ako je polje nalaz prazno, proveri napomenu i završni dokazni trag kako bi razlikovao neutvrđenu vrednost od greške u čitanju. Ako dokumentuju neutvrđenu valutu, prenesi "NA". Nesaglasnost prijavi pre izvoza. Nemoj koristiti null, numeričku zamenu ili valutu pretpostavljenu iz Excela. Nedostatak osnovnog teksta sam po sebi ne menja već potvrđen nalaz iz pripadajućeg aneksa.
+
+4. Sačuvaj i proveri izlaz
+
+Ime fajla je valuta_ugovora.json. Piši samo na putanju C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\valuta_ugovora.json. Registar, izvorne evidencije, postojeće instrukcije, repo i fajlove drugih polja otvaraj samo za čitanje.
+
+Sačuvaj UTF-8 JSON niz u redosledu registra. Svaki objekat ima tačno tri ključa, redom case_id, field i value. Sve tri vrednosti su tekst. Za field u svakom objektu upiši tačno "Valuta ugovora". Koristi JSON serijalizator koji pravilno kodira navodnike, obrnute kose crte i kontrolne znakove.
+
+Primer važećeg JSON niza sa jednim ugovorom
+
+[
+  {"case_id": "Z0002-20220615-01", "field": "Valuta ugovora", "value": "EUR"}
+]
+
+Ponovo učitaj stvarno sačuvani fajl UTF-8 JSON parserom. Proveri da je koren niz, da broj objekata odgovara učitanom registru, da su case_id jedinstveni i da su skup i redosled svih oznaka identični registru. Za svaki objekat proveri tačna tri ključa, tekstualne tipove, doslovni field i jednakost value sa pripadajućim završnim nalazom prema koraku 3. Provera se ne vezuje za fiksan broj ugovora niti za hash ranije serije.
+
+U završnom izveštaju navedi punu putanju izlaza, izvor poslednje evidencije, broj zapisa i broj vrednosti koje su tačno "NA". Broj namerno praznih vrednosti za ovo polje je 0.

@@ -1,0 +1,46 @@
+Instrukcija za izvoz polja „Iznos ostalih komponenti“ (BM) u JSON
+
+Ovo je samostalna instrukcija za izričito zatraženi JSON izvoz postojećih rezultata. Podrazumevani izlaz osnovne obrade ostaje TSV. Osnovna detekcija i Excel verifikacija primenjuju se prema zasebnim, postojećim instrukcijama.
+
+1. Izvori i odredište
+
+Tačan tekst ključa field je Iznos ostalih komponenti.
+Ime izlaznog fajla je iznos_ostalih_komponenti.json.
+Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\iznos_ostalih_komponenti.json.
+
+Autoritativni spisak i redosled ugovora daje C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Učitaj case_id, cost_center i path_to_file kao tekst. Očekivani broj zapisa preuzmi iz važeće verzije registra za konkretan izvoz. Po potrebi evidentiraj kontrolne SHA-256 vrednosti korišćenih ulaza za tu seriju.
+
+Koristi poslednju završenu BM evidenciju koja uključuje korekcije i obnovljene zavisnosti:
+C:\Kontroling\OUT\ostale_komponente_svi_lokali\evidencija_ostale_komponente.tsv
+Dokumentarni nalaz i podatke o primeni proveri u odgovarajućoj verziji:
+C:\Kontroling\OUT\ostale_komponente_svi_lokali\nalazi_ostale_komponente.tsv
+
+U evidenciji su relevantne kolone case_id, Z, osnovni_ocr, BL, BM, ishod, BI, BM_valuta i BM_sha256. Ako je BM_sha256 popunjen, proveri da pokazuje na korišćenu verziju nalaza. Za potvrđene delove vrednosti po potrebi proveri važenje BM u koloni vazenje_BM i razliku valuta u valutna_napomena. Koristi konačni nalaz iz ugovorne dokumentacije. Kolone sa Excel kandidatima i ishodima poređenja služe samo verifikaciji.
+
+2. Povezivanje
+
+Redom prolazi kroz registar. Poveži cost_center sa Z i path_to_file sa osnovni_ocr. Pri poređenju koristi dosledno zapisane Windows putanje. Potvrdi jedinstven nalaz i jednak postojeći case_id. Preuzmi case_id iz registra bez renumeracije. Više ugovora sa istim centrom troška ostaje u zasebnim objektima. Uključi sve ugovore iz registra, a dopunske ugovore van tog spiska ostavi izvan izvoza.
+
+Za šest ugovora bez osnovnog OCR u ovoj seriji koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Preko case_id pronađi datum_osnovnog_ugovora, path_to_evidence, redovi i citat. U navedenom dokumentu proveri citat i datum, a zatim upari konkretan case_id u okviru istog cost_center. Kod Z0518 isti dokument potvrđuje dva različita osnovna datuma u različitim redovima. Prazna putanja ili sama Z šifra ne identifikuju ugovor.
+
+Ako zapis nedostaje, više kandidata ostane moguće ili se izvori ne slažu, koordinatoru prijavi konkretan case_id, cost_center, putanju i kandidate ili sporni dokaz. Sačekaj razrešenje pre konačnog izvoza.
+
+3. Mapiranje vrednosti
+
+Za BL=yes/DA i ishod UTVRDJEN koristi konačni iznos iz BM, valutu iz BM_valuta i potvrđeni period iz BI. Sačuvaj sva potvrđena svojstva vrednosti i dijakritike. U usvojenom izvozu za Z0491-20230801-01 BM je 3000, BM_valuta je RSD i BI je monthly, što daje tačan value „3000 RSD mesečno“. Valuta RSD je valuta komponente iz nalaza, dok je EUR valuta zakupnine. Datumi primene služe potvrdi da je nalaz tekući; value u ovom slučaju sadrži iznos, valutu i period.
+
+Za BL=yes/DA i BM=NA ili ishod IZNOS_NEUTVRDIV izvezi tekst „NA“. Za BL=NA i BM=NA_BL takođe izvezi „NA“. Za BL=NE ili neprimenljiv BM uključi ugovor i izvezi „NA“, jer nema utvrđenog ugovornog iznosa za ovo polje. Prazna BM vrednost bez utvrđenog iznosa izvozi se kao „NA“. BM nema namerno praznu završnu vrednost. Ako status UTVRDJEN ima prazna ili međusobno protivrečna polja, proveri poslednju evidenciju i razreši nesaglasnost pre izvoza. Koristi tekst „NA“ za neutvrđeno, bez null vrednosti, numeričkih zamena ili preuzimanja Excel nule. Uključi svaki ugovor bez obzira na primenljivost i rezultat Excel validacije.
+
+4. Zapisivanje i završna provera
+
+Sačuvaj UTF-8 JSON niz u redosledu registra sa tačno jednim objektom po case_id. Svaki objekat ima tačno tri ključa case_id, field i value. Sve vrednosti su tekstualne. Koristi JSON serijalizator radi ispravnog escape-ovanja navodnika, obrnutih kosih crta i kontrolnih znakova. Sačuvaj čitljive dijakritike.
+
+Primer validnog JSON niza:
+[
+  {"case_id":"Z0491-20230801-01","field":"Iznos ostalih komponenti","value":"3000 RSD mesečno"},
+  {"case_id":"Z0002-20220615-01","field":"Iznos ostalih komponenti","value":"NA"}
+]
+
+Ponovo učitaj stvarno sačuvani JSON kao UTF-8. Proveri da je koren niz i da broj zapisa odgovara učitanom registru. Proveri jedinstvenost, jednak skup i isti redosled case_id, tačno tri propisana ključa, tekstualne tipove i tačan field u svim objektima. Uporedi učitane vrednosti sa vrednostima pripremljenim iz evidencije kako bi proverio i ispravno escape-ovanje. Upis je ograničen na JSON ovog polja u odredišnom folderu. Registar, ostali fajlovi, instrukcije i repozitorijum ostaju izvori za čitanje.
+
+Po završetku prijavi punu putanju JSON fajla, broj zapisa, broj vrednosti koje su tačno tekst „NA“ i putanju korišćene evidencije. Ako format nekog budućeg izvoza predvidi namerno prazne vrednosti, njihov broj prijavi zasebno. Za BM je prema ovoj instrukciji taj broj nula.

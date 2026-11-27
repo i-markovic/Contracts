@@ -1,0 +1,79 @@
+SAMOSTALNA INSTRUKCIJA ZA JSON IZVOZ POLJA „Trajanje produženja”
+
+1. Namena i granice
+Ovu instrukciju primeni samo kada je JSON izvoz izričito zatražen. Ona izvozi već završen nalaz iz ugovorne dokumentacije i ne uvodi nova pravila detekcije, novu kompletnu ekstrakciju ili novu Excel proveru. Podrazumevani izlaz osnovne W obrade ostaje TSV. Ne menjaj prethodne instrukcije za identifikaciju i validaciju, izvore u OUT, V nalaze, registar, Excel, tuđe izlaze ili repo.
+
+Tačan field: Trajanje produženja
+Tačno ime izlaznog fajla: trajanje_produzenja.json
+Puna izlazna putanja: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\trajanje_produzenja.json
+
+2. Autoritativan spisak i redosled
+Učitaj C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Kolone su case_id, cost_center i path_to_file. Izvezi svaki ugovor, tačno redosledom redova registra, sa jednim objektom po postojećem case_id. case_id prenesi kao tekst, bez renumeracije, uklanjanja vodećih nula ili promene oznake. Više ugovora istog cost_center zadrži kao odvojene zapise. Broj zapisa mora biti jednak stvarnom broju ugovora u trenutno odobrenom registru; ne fiksiraj 600 kao trajno pravilo. Ne uključuj dodatne foldere ili ugovore izvan odobrenog registra.
+
+3. Konkretni izvori poslednjeg nalaza
+Poslednja potpuna W evidencija:
+C:\Kontroling\OUT\trajanje_svi_lokali\evidencija_trajanja_produzenja.tsv
+Izvorni konačni W nalazi:
+C:\Kontroling\OUT\trajanje_svi_lokali\nalazi_trajanja_produzenja.tsv
+Dokumentacija završetka i ograničenja:
+C:\Kontroling\OUT\trajanje_svi_lokali\statistika.md
+Zavisni puni V nalaz i veze:
+C:\Kontroling\OUT\automatsko_svi_lokali\nalazi_automatskog_produzenja.tsv
+C:\Kontroling\OUT\automatsko_svi_lokali\evidencija_automatskog_produzenja.tsv
+
+Koristi poslednje završene verzije, uključujući korekcije i obnovljene zavisnosti. Proveri završetak i važeće kontrolne hash-eve prema statistici konkretne serije. Nemoj trajno vezati instrukciju za određeni hash ili broj nalaza. Ako je izvorna zavisnost promenjena a W nije obnovljen, prijavi neusaglašenost koordinatoru; ne izmisli nalaz i ne zameni ga Excel vrednošću.
+
+4. Kolone za mapiranje i identitet ugovora
+Za value koristi isključivo kolonu nalaz_godine iz konačnih W nalaza. Ista kolona je preneta u W evidenciju i mora biti saglasna za sve redove istog case_id. Evidencija ima više redova po ugovoru jer čuva Excel kandidate; nemoj svaki njen red pretvoriti u poseban JSON objekat niti birati nalaz prema primarni_W.
+
+Poveži postojeći case_id uz obaveznu proveru cost_center iz registra prema Z iz evidencije/nalaza, i path_to_file prema osnovni_ocr_putanja. Kolona osnovni_ocr_putanja identifikuje osnovni ugovor; ocr_putanja može pokazivati na merodavan povezani aneks i zato nije obavezno jednaka putanji osnovnog ugovora iz registra. Proveri dokaz_veze, dodatni_ocr_putanja i nasleđene V_pilot_* podatke kada je potrebna dokumentovana veza/verzija. Ne koristi samo Z, približnu adresu ili prvi Excel kandidat kao dovoljno povezivanje.
+
+Ako se ista oznaka povezuje sa različitim ugovorima, predmetima ili nesaglasnim nalazima, prijavi koordinatoru konkretne case_id, cost_center, putanje/kandidate i nesaglasne vrednosti i sačekaj razrešenje pre konačnog izvoza. Ne biraj proizvoljno, ne spajaj različite ugovore i ne menjaj registar.
+
+5. Šest ugovora bez osnovnog OCR
+Za prazne osnovne putanje koristi dokument:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+Njegove kolone su case_id, datum_osnovnog_ugovora, path_to_evidence, redovi i citat. Proveri postojeći case_id, cost_center i identitet potvrđen datumom i navedenim dokumentom/citatom. Ne tretiraj isti prazan path_to_file kao jedinstven ključ. Prazna osnovna putanja i putanja potvrdnog aneksa nisu ista vrsta podatka i ne moraju biti jednake.
+
+Dokumentovani slučajevi su Z0255-20200305-01, Z0374-20151121-01, Z0379-20200601-01, Z0447-20160201-01, Z0518-20151001-01 i Z0518-20240901-01. Poslednja dva potvrđuje isti aneks, ali se osnovni ugovori razlikuju datumima 01.10.2015. i 01.09.2024; čuvaju dva različita postojeća case_id. Ovaj dokaz podržava identitet, ne stvara novi W nalaz. Ako identitet ostane dvosmislen, prijavi oba kandidata pre izvoza.
+
+6. Tačno mapiranje value i primenljivosti
+W znači maksimalno trajanje automatskog mehanizma posle osnovnog roka koji se aktivira ako ugovor nije raskinut. Osnovni rok nije deo W. Produženje zbog obustave rada ima drugi okidač i ostaje izvan W. Ponavljanje daje unlimited samo kada je tako potvrđeno završenom detekcijom. Ova pravila se ne preračunavaju u izvozu: prenosi se već sačuvan nalaz_godine.
+
+Ako postoji konačni W nalaz, prenesi njegovu potvrđenu tekstualnu vrednost nalaz_godine: broj godina ostaje tekst, npr. "5", a unlimited ostaje tačno "unlimited". Ne dodaj osnovni rok, jedinicu "godina", trajanje obustave, komentare, citate ili druge nepredviđene delove u value. Ne zaokružuj i ne prevodi potvrđenu oznaku. Sačuvaj dijakritike i sve potvrđene delove vrednosti predviđene detekcijom.
+
+Primena W se u ovoj obradi zasniva isključivo na OCR V nalazu DA, sačuvanom u ulaz_V_ocr, a ne na Excel V. Za ugovore sa V nalazom NE, NA ili NEPRIMENLJIVO W nije izdvojen i izvozna vrednost je tekst "NA", nikada "0". Ako konačni nalaz_godine izričito glasi NA, ili vrednost prema završenoj detekciji nije utvrđena/prazna, izvezi tekst "NA". Ne konstruiši nalaz iz odsustva zapisa. Prvo proveri da se ne radi o pogrešnoj verziji, nepotpunom prenosu ili dvosmislenom povezivanju.
+
+Svaki ugovor iz registra ostaje u izvozu, uključujući neprimenljive i Excel-neuporedive. Kod W ne postoji namerna prazna izlazna vrednost "": neutvrđena ili neizdvojena vrednost daje "NA". Pravilo namernog praznog teksta za drugo polje „Kraj zakupa” ne primenjuj na „Trajanje produženja”. Zabranjeni su null, numerički NA, prazan objekat i proizvoljne zamene.
+
+Kolone W_original, W_normalizovano, primarni_ishod, poredjenje_ovog_W, primarni_W, Z_skup_ishod i AA–AH sadrže referentne podatke/ishode validacije, a ne izvoznu vrednost ovog polja. Ne koristi ih umesto nalaz_godine i ne isključuj ugovor zbog nepoklapanja ili odsustva Excel reda.
+
+7. Format fajla
+Sačuvaj UTF-8 JSON niz tačno redosledom registra. Jedan objekat po case_id, sa TAČNO tri ključa: case_id, field, value. Sve tri vrednosti moraju biti tekst. field mora u svakom objektu biti tačno "Trajanje produženja". Koristi JSON serializer sa očuvanjem Unicode/dijakritika (u Python-u json.dumps(..., ensure_ascii=False)), bez ručnog spajanja ili neispravnog escape-ovanja navodnika, kontrolnih znakova i obrnutih kosa crta. Ne dodaj metapodatke ili druge ključeve u objekte. Za ceo izvoz koristi jedan niz, ne JSON Lines.
+
+Validan primer formata jednog poznatog nalaza:
+[
+  {
+    "case_id": "Z0008-20190923-01",
+    "field": "Trajanje produženja",
+    "value": "5"
+  }
+]
+
+Ovaj primer nije zamena za pun sadržaj registra. Za neutvrđenu vrednost value je "NA" kao tekst; za potvrđen ponavljajući mehanizam value je "unlimited" kao tekst.
+
+8. Kontrola stvarno sačuvanog izlaza
+Ponovo učitaj trajanje_produzenja.json sa diska i proveri:
+- da je sadržaj validan JSON niz i da broj objekata odgovara broju ugovora iz registra;
+- da su case_id jedinstveni i da su skup i redosled potpuno jednaki registru;
+- da svaki objekat ima tačno ključeve case_id, field, value i da su sve vrednosti tekst;
+- da svaki field ima tačnu vrednost "Trajanje produženja", sa dijakriticima;
+- da svaka value odgovara konačnom nalaz_godine ili dokumentovanom pravilu "NA", nezavisno od Excel ishoda;
+- da je više evidencijskih redova istog ugovora saglasno i svedeno na jedan izvozni objekat;
+- da je JSON pravilno escape-ovan i da nema null, numeričkih vrednosti ili namernih praznih W vrednosti;
+- da registar, postojeći nalazi/evidencije, instrukcije i tuđi fajlovi nisu menjani. Hash-eve pre/posle možeš koristiti za proveru nepromenjenosti, ali ih ne fiksiraj kao trajnu uslovnu vrednost ove instrukcije.
+
+9. Završna predaja
+Vrati punu putanju JSON fajla, stvarni broj zapisa, broj vrednosti tačno jednakih tekstu "NA" i broj namernih praznih vrednosti (za ovo W polje očekuje se 0). Navedi punu putanju poslednje W evidencije i nalaza korišćenih za izvoz. Prijavi preostala ograničenja povezivanja ako ih ima; ne tvrdi da je izvoz verifikovan pre stvarnog ponovnog učitavanja i svih kontrola.
+
+Kontrolni primer već usvojene serije, ne trajno pravilo: registar je imao 600 ugovora; izvoz je sadržao 102 postojeća W nalaza i 498 tekstualnih "NA", bez namernih praznih vrednosti. Vrednosti su bile 96 puta "5", 2 puta "unlimited", 2 puta "3", jednom "2" i jednom "10". Buduće serije proveravaju se prema njihovom stvarnom registru i poslednjem završenom nalazu.

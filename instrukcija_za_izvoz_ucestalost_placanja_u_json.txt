@@ -1,0 +1,42 @@
+Instrukcija za izvoz polja „Učestalost plaćanja” u JSON
+
+1. Obuhvat i odredište
+
+Primeni ovu instrukciju kada je JSON izvoz izričito zatražen. Podrazumevani izlaz osnovne obrade je TSV. Detekcija i Excel verifikacija primenjuju postojeće instrukcije.
+
+U svakom JSON objektu upiši tačan naziv polja „Učestalost plaćanja” u ključ field. Ime izlaznog fajla je ucestalost_placanja.json, a puna putanja je:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\ucestalost_placanja.json
+
+2. Spisak ugovora i redosled
+
+Učitaj UTF-8 CSV C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv kao autoritativan spisak i redosled. Preuzmi postojeći case_id kao tekst, bez renumeracije. Zadrži više ugovora sa istim cost_center kao zasebne zapise. Obuhvat i broj zapisa odredi iz verzije registra za koju je zatražen izvoz. Dopunski dokumenti van registra ne ulaze u ovaj izvoz. Proveri jedinstvenost case_id u registru i evidentiraj korišćenu verziju izvora. Broj 600 i SHA-256 prethodne serije služe samo za proveru te serije.
+
+3. Izvor i povezivanje
+
+Koristi poslednju finalnu evidenciju C:\Kontroling\OUT\ucestalost_svi_lokali\evidencija_ucestalost.tsv, sa jednim redom po case_id. Učitaj je kao UTF-8 TSV uz standardno tumačenje navodnika. Prateći C:\Kontroling\OUT\ucestalost_svi_lokali\nalazi_ucestalost.tsv i kontrola_zamrzavanja.tsv u istom folderu služe za proveru usklađenosti nalaza i verzije. Uvaži dokumentovane završne korekcije. Ako se izvorni nalazi i finalna evidencija razlikuju za ugovor, proveri koja je verzija merodavna pre izvoza.
+
+Poveži cost_center iz registra sa kolonom Z i path_to_file sa kolonom osnovni_ocr. Putanje smeš uporediti uz ujednačavanje separatora i veličine slova prema Windows pravilima. Proveri da jedini pronađeni red ima isti case_id kao registar. Samo Z, naziv fajla ili pozicija reda nisu dovoljni. Ako nema jednoznačne veze, prijavi koordinatoru konkretne case_id, cost_center, path_to_file i sporne kandidate iz evidencije. Sačekaj razrešenje pre konačnog izvoza.
+
+Za šest ugovora bez osnovnog OCR-a u poslednjoj seriji koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Nađi dokaz po case_id. Proveri datum_osnovnog_ugovora u citatu, dokument iz path_to_evidence, navedene redove i doslovni citat. Poveži cost_center sa Z, a path_to_evidence sa osnovni_ocr i potvrdi isti case_id i oznaku izvor_verzija=OSNOVNI_NEDOSTAJE_POVEZANI_AKT. Prazan path_to_file nije ključ. Z0518-20151001-01 i Z0518-20240901-01 koriste isti aneks, a odvojeni datumi osnovnih ugovora i citati u dokaznom CSV-u potvrđuju dva zasebna identiteta. Dokazni CSV služi za povezivanje. Vrednost ostaje nalaz iz finalne evidencije.
+
+4. Mapiranje u JSON
+
+case_id prepiši doslovno iz registra. Za field uvek koristi „Učestalost plaćanja”. Interna kolona field u evidenciji ima oznaku ucestalost_placanja.
+
+Za value prenesi doslovno tekst iz kolone value finalne evidencije. Proveri da odgovara koloni merodavni_BI i da odražava utvrđeni period iznosa zakupnine iz kolone period_iznosa prema C15. U poslednjem izvozu primenjeno je direktno mapiranje: monthly → "monthly", annual → "annual", other → "other", NA → "NA". Očuvaj potvrđenu vrednost u celosti, uključujući znakove, dijakritike i sve potvrđene delove. Kolona uplate_merodavno opisuje dinamiku uplata, a prvobitni_BI raniji nalaz. BI_original, kandidati_BI_original i kolone ishod_* pripadaju Excel proveri. Za JSON value koristi isključivo konačni ugovorni nalaz.
+
+Uključi svaki ugovor iz registra bez obzira na primenljivost, prisustvo Excel kandidata ili ishod Excel verifikacije. Za BI detekcija nema namerno praznu izlaznu vrednost ni poseban kod neprimenljivosti. Kada konačni nalaz nije utvrđen, izvezi tekst "NA". Ako je kolona value prazna, proveri konačnu evidenciju. Samo potvrđen neutvrđen nalaz mapira se u "NA". Ako praznina potiče od neusaglašenog izvora ili nejasnog povezivanja, prvo razreši zapis. Koristi tekst "NA" umesto null, broja, praznog teksta ili proizvoljne zamene.
+
+5. Upis i završna provera
+
+Prvo proveri kompletan niz u memoriji, zatim sačuvaj samo dodeljeni JSON fajl. Koristi standardni JSON serijalizator, na primer Python json.dump sa ensure_ascii=False i kodiranjem UTF-8 bez BOM-a. Serijalizator pravilno maskira navodnike, obrnute kose crte i kontrolne znakove. Izvezi niz u redosledu registra, sa jednim objektom po case_id i sa tačno tri ključa case_id, field i value. Sve vrednosti su tekstualne.
+
+Primer validnog JSON niza sa jednim zapisom:
+
+[
+  {"case_id": "Z0002-20220615-01", "field": "Učestalost plaćanja", "value": "monthly"}
+]
+
+Ponovo učitaj stvarno sačuvani fajl pomoću JSON parsera. Proveri da je koren niz, da broj objekata odgovara broju ugovora u važećem registru, da su case_id jedinstveni i da su skup i tačan redosled oznaka jednaki registru. Proveri tačno tri propisana ključa, tekstualne tipove, tačan field i jednakost svake vrednosti sa mapiranim nalazom. Uspešno parsiranje i provera jednakosti potvrđuju ispravno maskiranje znakova. Pri izvozu očuvaj registar, postojeće instrukcije, tuđe fajlove i repo.
+
+U završnom izveštaju navedi punu putanju izlaznog fajla, broj zapisa, broj tačnih tekstualnih vrednosti "NA" i putanju korišćene finalne evidencije. Ako za neko polje postoje namerno prazne vrednosti, prijavi njihov broj odvojeno. Za BI očekivani broj namerno praznih vrednosti je nula.

@@ -1,0 +1,39 @@
+INSTRUKCIJA ZA IZVOZ POLJA „AUTOMATSKO PRODUŽENJE“ U JSON
+
+Ova samostalna instrukcija primenjuje se kada je izričito zatražen JSON izvoz već izdvojenog polja. Podrazumevani izlaz osnovne obrade ostaje TSV. Pravila detekcije i Excel validacije ostaju uređena zasebnim instrukcijama.
+
+1. Izvori i odredište
+
+- Autoritativni spisak i redosled ugovora su u C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Koristi kolone case_id, cost_center i path_to_file. Zadrži case_id iz registra kao tekst, bez renumeracije.
+- Poslednja evidencija korišćena za izvoz je C:\Kontroling\OUT\automatsko_svi_lokali\evidencija_automatskog_produzenja.tsv. Za povezivanje koristi kolone case_id, Z, osnovni_ocr i, po potrebi, dodatni_ocr. Za value koristi isključivo kolonu nalaz. Evidencija prenosi konačne nalaze iz C:\Kontroling\OUT\automatsko_svi_lokali\nalazi_automatskog_produzenja.tsv. Pri ponavljanju izvoza koristi poslednju završenu evidenciju sa svim korekcijama i usklađenim nalazima. Završetak serije proveri u statistika.md u istom folderu preko markera ZAVRSENO i SHA-256 navedenog za tu seriju.
+- Tačna vrednost field je „Automatsko produženje“. Ime izlaznog fajla je automatsko_produzenje.json. Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\automatsko_produzenje.json.
+
+2. Povezivanje ugovora
+
+- Poveži cost_center iz registra sa kolonom Z i path_to_file sa kolonom osnovni_ocr. Ako je osnovni_ocr relativna putanja, razreši je prema korenu C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026. Proveri da jedini odgovarajući red ima isti case_id kao registar. Svaki ugovor na zajedničkom cost_center vodi odvojeno. Sam Z ne identifikuje ugovor.
+- Za šest ugovora bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Uskladi case_id i Z, pa potvrdi datum osnovnog ugovora, putanju potvrdnog dokumenta, navedene OCR redove i citat. Potvrdni dokument poveži sa odgovarajućom putanjom iz dodatni_ocr u evidenciji. Za Z0518-20151001-01 i Z0518-20240901-01 isti aneks upućuje na dva različita osnovna ugovora. Njih razlikuju datumi i citirani redovi. Prazna putanja nije jedinstven ključ.
+- Ako veza ostane dvosmislena ili nedostaje potvrda identiteta, prijavi konkretne case_id, Z i sporne putanje koordinatoru. Sačekaj razrešenje pre konačnog izvoza. Dopunski ugovori van registra ne ulaze u ovaj JSON.
+
+3. Prenos vrednosti
+
+- Prenesi nalaz iz dokumentacije iz kolone nalaz, uz sve potvrđene delove i dijakritike. Uključi svaki red registra bez obzira na ishod Excel validacije i primenljivost. Kolone excel_V_za_ugovor, excel_V_skup, ishod_G_V_po_Z i ishod_za_ugovor služe poređenju i ne određuju value. Izvoz koristi već utvrđene nalaze.
+- „DA“ → "DA", potvrđen automatski nastavak po isteku osnovnog perioda.
+- „NE“ → "NE", automatski nastavak nije ugovoren prema pravilima detekcije.
+- „NA“ → "NA", ishod nije utvrđen. Ako je nalaz u jednoznačno povezanom redu prazan jer ishod nije utvrđen, upiši "NA". Za neočekivan ili protivrečan status proveri završenu evidenciju pre izvoza.
+- „NEPRIMENLJIVO“ → "NEPRIMENLJIVO", potvrđen zakup na neodređeno vreme bez isteka osnovnog perioda za ovo polje. Ovo polje nema namerno prazne value zapise. Koristi tekstualne vrednosti bez null, brojeva ili zamenskih oznaka.
+
+4. Format i kontrola
+
+Sačuvaj UTF-8 JSON niz redosledom iz registra, sa tačno jednim objektom po case_id. Svaki objekat ima tačno ključeve case_id, field i value, sa tekstualnim vrednostima. Koristi JSON serijalizator koji ispravno zapisuje navodnike, obrnute kose crte i kontrolne znakove. Primer strukture:
+
+[
+  {
+    "case_id": "Z0008-20190923-01",
+    "field": "Automatsko produženje",
+    "value": "DA"
+  }
+]
+
+Ponovo učitaj stvarno sačuvani JSON. Proveri da je dokument niz, da broj objekata odgovara broju redova aktuelnog registra i da su case_id jedinstveni i istog skupa i redosleda kao u registru. Proveri tačno tri ključa, tekstualne tipove, doslovan naziv field i podudarnost value sa izvornim nalazom posle mapiranja. Parsiranjem i poređenjem pročitanih i očekivanih vrednosti proveri i zapis znakova. U ovom postupku upisuj samo automatsko_produzenje.json. Registar, izvorne evidencije, instrukcije, repo i tuđe fajlove čitaj bez izmena.
+
+U završnom izveštaju navedi punu putanju JSON-a, broj zapisa, broj zapisa čiji je value tačno "NA", broj namerno praznih value zapisa ako postoje i putanju korišćene evidencije. Broj zapisa i SHA-256 utvrđuju se za aktuelnu seriju.

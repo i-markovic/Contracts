@@ -1,5 +1,50 @@
-Izvoz polja Broj ugovora u JSON
+Izvoz polja „Broj osnovnog ugovora” u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Primeni ovu samostalnu instrukciju samo kada je izričito zatražen JSON izvoz. Podrazumevani izlaz osnovne obrade ostaje TSV. Za detekciju i Excel verifikaciju i dalje važe njihove posebne instrukcije. Ovde se prenosi već utvrđen nalaz.
 
-Ulaz je nalazi_broja_ugovora.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "Broj ugovora". Izlazni fajl nazovi broj_ugovora.json.
+1. Ulazi i obuhvat
+
+Autoritativan spisak ugovora i njihov redosled preuzmi iz registra:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+
+Poslednja evidencija izdvojenih nalaza za ovo polje je:
+C:\Kontroling\OUT\broj\evidencija.tsv
+
+Učitaj završnu evidenciju sa svim prihvaćenim korekcijama i ažuriranim zavisnim nalazima. Koristi tabulator kao razdelnik. Identifikatore, Z šifre i brojeve ugovora učitaj kao tekst, uz očuvanje vodećih nula i doslovne vrednosti „NA”.
+
+2. Povezivanje ugovora
+
+Obradi registar redom. Za neprazan path_to_file pronađi tačno jedan red evidencije u kojem Z odgovara registarskom cost_center, a osnovni_OCR pokazuje na istu datoteku kao path_to_file. Upoređuj pune Windows putanje. Potvrdi da se case_id evidencije slaže sa registrom. Za izlaz uvek preuzmi postojeći case_id iz registra kao tekst, bez renumeracije. Više ugovora istog cost_center zadrži odvojeno.
+
+Za šest ugovora bez osnovnog OCR-a koristi i:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+
+Po case_id pronađi dokazni zapis. Za isti Z i case_id potvrdi da datum u evidenciji odgovara datumu datum_osnovnog_ugovora, a izvor dokumentu path_to_evidence. U označenim redovima (redovi) proveri citat koji identifikuje osnovni ugovor. Dokazni dokument služi za povezivanje. Vrednost polja i ovde se preuzima iz završne evidencije. Prazan path_to_file nije jedinstveni ključ, a sama Z šifra nije dovoljna za povezivanje.
+
+Ako veza izostane, postoji više kandidata ili su identifikacioni podaci protivrečni, pre konačnog izvoza prijavi konkretne case_id, Z šifre, datume i sporne putanje koordinatoru. Sačekaj razrešenje. Nedostajući red evidencije ne tretiraj kao utvrđen nalaz „NA”.
+
+3. Mapiranje kolona evidencije
+
+Za value preuzmi konačan dokumentovani nalaz iz kolone broj. Prenesi ceo tekst, uključujući sve potvrđene brojeve kada ih ugovor ima više, njihov redosled, razdelnike, vodeće nule, dijakritike i godinu u evidentiranom obliku. Kolone izvorni_broj i datum_dopune dokumentuju dopunu godine, a izvor i dokaz dokumentuju osnov nalaza. Pri izvozu nema novog očitavanja, dopisivanja godine ili normalizacije za poređenje.
+
+Kolone Excel_red, preostali_redovi, izuzeti_C_Q i ishod pripadaju validaciji. Ne prenosi ih u value i ne preuzimaj Excel referentnu vrednost. Izvezi svaki ugovor iz registra bez obzira na ishod poređenja ili primenljivost validacije. Uredno povezan ugovor sa neutvrđenim brojem dobija tačan tekst "NA". Isto važi ako je neutvrđen nalaz u koloni broj ostavljen prazan. Ovo polje nema namerne prazne izlazne vrednosti. Ne koristi prazan string, JSON null, numeričku vrednost ili drugu zamenu za "NA".
+
+4. Format i odredište
+
+Tačan field: Broj osnovnog ugovora
+Ime fajla: broj_osnovnog_ugovora.json
+Puna izlazna putanja:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\broj_osnovnog_ugovora.json
+
+Sačuvaj UTF-8 JSON niz u redosledu registra, sa po jednim objektom za svaki case_id. Svaki objekat ima tačno tri ključa: case_id, field, value. Sve tri vrednosti su tekst. Koristi standardni JSON serijalizator koji pravilno kodira navodnike, obrnute kose crte i kontrolne znakove. Upiši samo navedeni JSON fajl. Registar, evidenciju, instrukcije, druge fajlove i repo ne menjaj.
+
+Primer ispravnog niza:
+[
+  {"case_id": "Z0002-20220615-01", "field": "Broj osnovnog ugovora", "value": "464/2022"}
+]
+
+5. Kontrola i predaja
+
+Ponovo otvori stvarno sačuvan fajl kao UTF-8 i parsiraj JSON. Proveri da je na vrhu niz i da je broj objekata jednak broju zapisa učitanog registra. Proveri jedinstvenost case_id i tačnu jednakost skupa i redosleda oznaka sa registrom. Za svaki objekat proveri tačna tri ključa, tekstualni tip svih vrednosti, tačan field i jednakost value sa mapiranim nalazom za taj ugovor. Kontrola zavisi od korišćenog registra, bez trajno zadatog broja ugovora ili kontrolnog zbira jedne serije.
+
+Po uspešnoj proveri vrati punu putanju JSON fajla, broj zapisa, broj vrednosti koje su tačno "NA" i putanju korišćene poslednje evidencije. Broj namerno praznih vrednosti za ovo polje je nula.

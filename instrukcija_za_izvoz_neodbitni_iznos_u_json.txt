@@ -1,0 +1,65 @@
+Uputstvo za izvoz polja „Neodbitni iznos” u JSON
+
+Namena
+
+Ovo uputstvo primeni kada je izričito zatražen JSON izvoz već obrađenog polja. Podrazumevani izlaz osnovne obrade ostaje TSV. Pravila detekcije i Excel verifikacije ostaju na snazi. Pri izvozu koristi završene nalaze, uključujući poslednje korekcije i obnovljene zavisnosti.
+
+Izlaz
+
+Tačna vrednost ključa field: Neodbitni iznos
+Tačno ime izlaznog fajla: neodbitni_iznos.json
+Puna izlazna putanja: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\neodbitni_iznos.json
+
+1. Učitaj registar i poslednju evidenciju
+
+Autoritativan spisak i redosled ugovora:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+
+Poslednja potvrđena evidencija polja za ceo skup:
+C:\Kontroling\OUT\neodbitni_iznos_svi_lokali\evidencija_neodbitni_iznos.tsv
+
+Prateći OCR nalaz iste obrade:
+C:\Kontroling\OUT\neodbitni_iznos_svi_lokali\nalazi_neodbitni_iznos.tsv
+
+Merodavna pravila za utvrđivanje iznosa:
+C:\Kontroling\OUT\neodbitni_iznos_svi_lokali\instrukcija_za_identifikaciju_neodbitnog_iznosa.txt
+
+Pre izvoza utvrdi koja je poslednja završena verzija evidencije za obuhvat registra. Pročitaj postojeće case_id kao tekst, bez renumeracije. Uključi svaki ugovor iz registra, bez obzira na primenljivost BO i ishod Excel verifikacije. Dopunski dokumenti van registra ne ulaze u niz.
+
+2. Poveži svaki zapis sa evidencijom
+
+Za ugovor sa osnovnim OCR-om poveži cost_center iz registra sa Z iz evidencije, a path_to_file sa osnovni_OCR. Pri poređenju primeni Windows pravila za kanonizaciju putanja i potvrdi isti case_id. Za svaki par oznake i putanje mora postojati tačno jedan odgovarajući nalaz. Više ugovora za isti cost_center zadrži kao zasebne zapise.
+
+Za šest zapisa bez osnovnog OCR-a u usvojenom registru koristi:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+
+Poveži isti case_id i cost_center/Z. Proveri datum_osnovnog_ugovora prema dokumentu i citatu na navedenim redovima i usaglasi ga sa evidencijom. Datumski segment u case_id deo je dodeljene oznake. Merodavan datum preuzmi iz potvrđenog dokaza i evidencije, a dodeljeni case_id sačuvaj bez izmene i kada se datum ugovora naknadno ispravi. Uskladi path_to_evidence sa dokaz_OCR u BO evidenciji. Za dva ugovora Z0518 zajednički aneks razlikuj datumima 01.10.2015. i 01.09.2024. i njihovim zasebnim citatima. Prazan path_to_file i sama Z oznaka nisu dovoljni za vezu. Ako zapis nedostaje, više nalaza odgovara ključu ili identitet odstupa, prijavi konkretne case_id i sporne putanje ili dokaze koordinatoru i sačekaj razrešenje pre konačnog izvoza.
+
+3. Odredi JSON value iz završenog OCR nalaza
+
+Pročitaj BN_nalaz, BO_primenljivost, BO_nalaz i BO_iznos iz povezanog reda. BO_valuta i BI_period_za_BO proveravaju da se dokumentovani iznos odnosi na istu valutu i jedan period plaćanja iz BI. U value prenesi potvrđeni novčani iznos iz BO_iznos kao tekst samo kada završeni nalaz uz BN=no utvrđuje taj iznos. Sačuvaj preciznost, predznak, dijakritike i sve potvrđene delove iskaza iz izvornog nalaza. Procenat, Excel referentni BO i ishod Excel provere ne služe za popunu value. Izvoz ne radi novu ekstrakciju niti preračunavanje.
+
+- BN=NA, BO_primenljivost=uslov_neutvrdjen, BO_nalaz=NA i prazan BO_iznos → upiši "NA".
+- BN=yes, BO_primenljivost=neprimenljivo_BN_yes, BO_nalaz=neprimenljivo i prazan BO_iznos → upiši "NA". Razlog neprimenljivosti ostaje u TSV-u.
+- BN=no uz primenljiv BO i iznos koji je u završenom nalazu ostao neutvrđen → upiši "NA".
+- Ako se status, dokaz i sadržaj BO_iznos međusobno ne slažu, razreši konkretan case_id prema završenoj evidenciji pre izvoza.
+
+Prazan BO_iznos u postojećoj evidenciji izvezen je kao tekst "NA" za svih 598 neutvrđenih i oba neprimenljiva slučaja. Za ovo polje nisu korišćene namerne prazne vrednosti. Koristi tačno tekst "NA" kada iznos nije utvrđen. Izostavljeni ključ, null, prazan tekst, nula ili drugi kod ne predstavljaju nepoznat iznos. Dokumentovana nula može se preneti samo kao tekst iz potvrđenog nalaza.
+
+4. Sačuvaj i proveri JSON
+
+Sačuvaj UTF-8 JSON niz tačnim redosledom registra, sa jednim objektom po case_id i tačno tri ključa, case_id, field i value. Sve vrednosti su tekst. Koristi JSON serijalizator koji pravilno kodira navodnike, obrnute kose crte i kontrolne znakove, uz očuvanje dijakritika.
+
+Validan primer:
+
+[
+  {
+    "case_id": "Z0002-20220615-01",
+    "field": "Neodbitni iznos",
+    "value": "NA"
+  }
+]
+
+Ponovo učitaj stvarno sačuvani fajl JSON parserom. Proveri UTF-8, tip niza, broj zapisa prema učitanom registru, jedinstvenost case_id i tačno isti skup i redosled identifikatora. Proveri propisane ključeve, tekstualni tip svih vrednosti, isti field u svakom zapisu i da ponovno učitane vrednosti tačno odgovaraju pripremljenim vrednostima, uključujući dijakritike i escape sekvence.
+
+U izveštaju navedi punu putanju JSON-a, broj zapisa, broj tačnih tekstualnih vrednosti "NA", broj namernih praznih vrednosti ako postoje, i putanju korišćene evidencije. Broj zapisa utvrdi iz registra za taj izvoz. Ako beležiš SHA-256, izračunaj ga za stvarno korišćene verzije. Piši samo dodeljeni JSON fajl. Registar, tuđe fajlove, prethodne instrukcije i repozitorijum ne menjaj.

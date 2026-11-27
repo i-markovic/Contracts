@@ -1,0 +1,28 @@
+ODBITNOST PDV-A — zasebna instrukcija Excel verifikacije
+
+Preduslov: nalazi_pdv.tsv mora biti već sačuvan iz OCR dokumenata, bez korišćenja contract-entries. Zabeleži vreme i SHA-256 nalaza. Ako drugi pregled ispravi citat ili napomenu, sačuvaj prvobitnu verziju i objasni promenu; ne dopunjavaj BN sadržajem Excel ćelija.
+
+Izvor: C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx, list contract-entries. Čitaj bez menjanja ili preračunavanja radne sveske.
+Proverena zaglavlja: G = Asset cost center (G); BN = VAT recoverable? (BN); BP = Determin. non-recov. amount (BP); BO = Non recoverable amount (BO).
+Stvarno zatečeni kodovi BN u celoj tabeli: tekstualni Yes, No, N/A. U pilotu su zatečeni No i N/A. U punom skupu proveri raspodelu ponovnim čitanjem. Ne pretpostavljaj numeric 1/0; ne prevodi NA u 0. N/A u Excelu je zatečena oznaka; ne dokazuje ni neprimenljivost ni odbitnost.
+
+Postupak
+1. G proveravaj kao tekstualni Z kod sa vodećim nulama. Enumeriši sve redove svakog Z koda u primarnom skupu; zabeleži originalne G i BN, adrese ćelija i brojeve redova. Ne uzimaj samo prvi red.
+2. Za sve kandidate čuvaj A, C, E, F, G, H, Q, U, BN, BO, BP. Excel datume čuvaj i kao originalni serijski broj i čitljiv datum. Q u IFRS obrascu ne mora biti datum zaključenja ugovora: razliku ne prikrivaj niti je automatski tumači kao drugi ugovor.
+3. Nivo Z je kontekst svih redova troškovnog mesta, ne dokaz istog ugovora. Posebno izdvoji kategoriju slot machines: sačuvaj red i originalni BN kao kontekst, ali isključi iz dokazivanja zakupnine lokala.
+4. Za nivo istog ugovora traži referencu C na osnovni ugovor ili pouzdano vezan aneks iz OCR-a i proveri strane, predmet/deo prostora i vremenski kontekst. Normalizacija 770/19→770/2019 ili vodećih nula u broju dopuštena je samo za poređenje, uz očuvanje originala. Ne pretvaraj 301 u30, 8V u8B, drugi ugovor ili drugi deo prostora u isto polje.
+5. Pouzdana atribucija je veza reda sa identifikovanim dokumentom/odnosom zasnovana na direktnoj referenci i dokumentovanom predmetu/stranama; nije nezavisna potvrda tačnosti Excel sadržaja niti BN. Verovatna veza ima podudaranje i kontekst, ali nedostaje direktna referenca ili postoje materijalne razlike. Nepotvrđena veza nema dovoljno dokaza. Odvojeno evidentiraj sve tri grupe i razlog; ne prenosi nalaz između prethodnog i novog ugovora.
+6. BN yes/no poredi semantički samo za pouzdano pripisan isti ugovor i odgovarajući dokazani period. Kod više redova prikaži svaki original; ne svodi različite kodove na većinu. Excel BP je zatečena tvrdnja, ne izvor OCR nalaza i ne poreski dokaz.
+7. NA iz dokumentacije uvek znači neproverljivo, čak i kada Excel sadrži N/A. Tekstualna sličnost NA/N/A može se brojati odvojeno, ali nije potvrđeno poklapanje. Verovatne i nepotvrđene veze su neprimenljive za strogo poređenje; ne brojati ih kao razlike.
+
+Izlazi
+evidencija_pdv.tsv: tačno jedan fizički red za svaki od 600 case_id; nalaz, citati, period, sva Z-kandidatura, pouzdane/verovatne/nepotvrđene veze, originalni BN i status oba nivoa. Prelomi unutar teksta kodirani kao \n.
+_radno/Excel_kandidati.tsv: jedan red za svaku kombinaciju case_id i originalnog Excel kandidata, uključujući isključene automate; transparentna kontrola duplikata i imenilaca.
+nepoklapanja_pdv.txt: UTF-8 bez zaglavlja, jedan red samo za konačno dokazanu yes/no razliku: Z | originalni Excel | nalaz. U originalnom segmentu sačuvaj BN ćeliju i stvarni kod; u nalazu case_id i dokazani ishod/period. Ne ubacuj NA ili neprimenljivu vezu samo da bi datoteka imala redove. Prazna datoteka je validna kada nema dokazivih razlika i ne znači da su svi ugovori potvrđeni.
+statistika.md: svi ishodi yes/no/NA za celokupan primarni skup; odvojeno PDV primenljivost i neprimenljivost; na nivouZ i nivou istog ugovora prikaži ukupan broj slučajeva, broj veza, uporediv broj, potvrđena poklapanja/razlike, isključenja i imenioce. Ako je uporediv imenilac0, procenat je neizračunljiv. Navedi broj TXT redova i odvojeno tekstualni NA/N/A broj.
+
+Završna kontrola
+Ponovo učitaj sve izlaze. Uporedi skup case_id sa registrom, obuhvat svih 382 foldera korpusa, redove TSV, originalne Excel ćelije, sve NA i eventualne razlike, sve citate i hash izvorne radne sveske. Proveri da osnovni nalaz nije postao Excel-prepis. Ne menjaj repo, Excel, druge projekte niti izvorne OCR datoteke. Ne koristi JSON ili opšte pravne norme.
+
+Primena na ceo skup
+Podobne kategorije za poređenje lokala su objekti i prostori. U punom skupu takođe izdvoji vozila i opremu. Zabeleži slučajeve bez kandidata i slučajeve sa drugim kategorijama. Dokazana neprimenljivost se kodira kao yes u nalazu. Prikaži originalni Excel BN u evidenciji i taj slučaj vodi van poređenja odbitnosti i van TXT razlika.

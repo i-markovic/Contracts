@@ -1,5 +1,47 @@
-Izvoz polja Adresa imovine u JSON
+Izvoz polja „Adresa imovine” u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Ovu instrukciju primeni kada je izričito zatražen JSON izvoz već obrađenog polja. Podrazumevani izlaz osnovne obrade ostaje TSV. Za izvoz koristi završene nalaze, uključujući poslednje korekcije. Pravila detekcije i Excel verifikacije ostaju u svojim zasebnim instrukcijama.
 
-Ulaz je nalazi_adrese_imovine.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "Adresa imovine". Izlazni fajl nazovi adresa_imovine.json.
+1. Učitaj registar i poslednju evidenciju
+
+Autoritativni spisak i redosled ugovora preuzmi iz datoteke
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+
+Poslednja evidencija adresa po zasebnom osnovnom ugovoru nalazi se u datoteci
+C:\Kontroling\OUT\adresa\evidencija.tsv
+
+Učitaj evidenciju kao UTF-8 TSV, uz podršku za BOM i navodnike oko ćelija. Kolone su redom: case_id, Folder, Z, Broj ugovora, Datum ugovora, Adresa imovine, Poređenje, Excel H (originali, JSON), Excel redovi G/H, Redovi poklapanja, Relevantni OCR, Napomena. Za identitet koristi case_id, Z, Relevantni OCR i, kada je potrebno, Datum ugovora. Jedini izvor za value je kolona Adresa imovine.
+
+2. Poveži svaki registarski zapis sa jednim redom evidencije
+
+Prođi kroz registar izvornim redosledom. Preuzmi postojeći case_id kao tekst, bez renumeracije. Sačuvaj vodeće nule u Z šifri. Za svaki cost_center odaberi redove sa istom vrednošću u koloni Z. Više ugovora na istom mestu ostaju zasebni zapisi, čak i kada se adrese podudaraju.
+
+Ako je path_to_file popunjen, parsiraj ćeliju Relevantni OCR kao JSON niz putanja. Prvu putanju, koja u ovoj evidenciji označava osnovni OCR, razreši prema direktorijumu C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026 i uporedi je sa path_to_file kao punu Windows putanju. Ostale putanje označavaju prateće dokumente. Potvrdi da izdvojeni red ima isti case_id kao registar.
+
+Za šest postojećih ugovora bez osnovnog OCR-a učitaj datoteku
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+
+Pronađi dokaz po case_id. Uporedi datum_osnovnog_ugovora sa kolonom Datum ugovora i path_to_evidence sa putanjama u Relevantni OCR. U dokumentu proveri navedene redove (redovi) i citat koji identifikuje taj osnovni ugovor. I kod istog potvrdnog dokumenta razdvoji ugovore po datumu i navodu o predmetu. Prazan path_to_file ili sama Z šifra nisu jedinstveni ključevi.
+
+Ako nedostaje red, ako više redova odgovara istom ugovoru ili ako se case_id, putanja i dokaz ne slažu, prijavi koordinatoru konkretne case_id, Z šifru, putanje i sporni podatak. Sačekaj razrešenje pre konačnog izvoza. Izvoz obuhvata samo ugovore iz registra.
+
+3. Prenesi vrednost
+
+Za svaki povezani ugovor upiši field tačno kao "Adresa imovine". U value prenesi konačan sadržaj kolone Adresa imovine sa dijakriticima i svim potvrđenim delovima, uključujući slovne nastavke, kose crte, raspone, oznake lokala ili ulaza i više adresa kada su evidentirane. Delimično utvrđenu adresu prenesi u potvrđenom obimu. Sačuvaj izvorni zapis iz evidencije bez normalizacije za poređenje.
+
+Uključi svaki ugovor bez obzira na primenljivost ili ishod Excel validacije, uključujući „Bez Excel vrednosti”. Kolone Poređenje i Excel H (originali, JSON) ne određuju value. Za ovo polje nema namerno prazne tekstualne vrednosti. Kada je nalaz neutvrđen, uključujući nerazrešenu protivrečnost, upiši tačno "NA". Ako je izvorna ćelija prazna, proveri u završnoj evidenciji i napomeni da označava neutvrđen nalaz. Ako je značenje praznine nejasno, prijavi case_id pre izvoza. Ne upisuj null, broj ili prazan tekst kao zamenu za "NA".
+
+4. Sačuvaj i proveri JSON
+
+Ime izlaznog fajla je adresa_imovine.json. Upiši samo fajl svog polja na putanju
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\adresa_imovine.json
+
+Sačuvaj jedan UTF-8 JSON niz redosledom registra, sa jednim objektom po case_id. Svaki objekat ima tačno tri ključa: case_id, field i value. Sve tri vrednosti su tekst. Koristi JSON serijalizator koji pravilno kodira navodnike, obrnute kose crte i kontrolne znakove i čuva dijakritike. Primer niza sa jednim ugovorom:
+
+[
+  {"case_id": "Z0002-20220615-01", "field": "Adresa imovine", "value": "Banatsko Novo Selo, Maršala Tita 67A"}
+]
+
+Ponovo učitaj stvarno sačuvani fajl UTF-8 JSON parserom. Proveri da je na vrhu niz, da broj objekata odgovara broju redova učitanog registra i da nema ponovljenih case_id. Uporedi čitav niz case_id sa registrom radi provere istog skupa i istog redosleda. U svakom objektu proveri tačan skup ključeva, tekstualne tipove, tačan field i jednakost dekodiranog value sa konačnim nalazom za taj ugovor. Broj zapisa proverava se prema aktuelnom registru. Broj zapisa i kontrolna suma jedne serije nisu trajna pravila izvoza. U postupku izvoza ne menjaj registar, evidenciju, instrukcije, repozitorijum ni fajlove drugih polja.
+
+Po uspešnoj proveri vrati punu putanju do JSON fajla, broj učitanih objekata, broj objekata čiji je value tačno "NA" i putanju poslednje korišćene TSV evidencije. Za Adresu imovine očekivani broj namerno praznih vrednosti je nula.

@@ -1,0 +1,29 @@
+INSTRUKCIJA ZA IZVOZ POLJA „VRSTA PLAĆANJA“ U JSON
+
+1. Obuhvat i odredište
+Ovu instrukciju primeni kada je izričito zatražen JSON izvoz već izdvojenog polja „Vrsta plaćanja“ (BK). Podrazumevani izlaz osnovne obrade je TSV. Pravila detekcije i Excel verifikacije ostaju u zasebnim instrukcijama.
+U svaki objekat upiši "field": "Vrsta plaćanja". Izlazni fajl je vrsta_placanja.json. Puna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\vrsta_placanja.json.
+
+2. Spisak i povezivanje ugovora
+Učitaj C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv kao autoritativni spisak i redosled. Preuzmi case_id iz registra kao tekst i sačuvaj ga bez renumeracije. Obuhvati svaki red registra, uključujući sve ugovore sa zajedničkim cost_center. Odredi očekivan broj zapisa iz učitanog registra.
+U poslednjoj evidenciji pronađi red po case_id. Potvrdi da su cost_center iz registra i Z iz evidencije jednaki, a path_to_file iz registra i osnovni_ocr iz evidencije pokazuju na isti osnovni OCR. Relativni osnovni_ocr tumači u odnosu na C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026. Pri poređenju normalizuj Windows putanje. Z sam ne određuje identitet ugovora.
+Za šest zapisa bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Pronađi potvrdni zapis po case_id, proveri datum osnovnog ugovora i potvrdni dokument path_to_evidence, lociraj redove i pročitaj citat. Uporedi identitet i putanju potvrdnog dokumenta sa kolonom aneksi u evidenciji. Dva zapisa Z0518 koriste isti dokument, a razdvajaju ih različiti datumi i citati za svaki case_id. Prazan path_to_file ne koristi kao jedinstveni ključ. Ako veza nedostaje ili je dvosmislena, prijavi koordinatoru konkretne case_id, cost_center, putanje i sporne kandidate. Nastavi konačni izvoz tek kada se te veze razreše.
+
+3. Izvor i mapiranje vrednosti
+Koristi poslednju završenu verziju C:\Kontroling\OUT\vrsta_svi_lokali\evidencija_vrsta.tsv sa svim odobrenim OCR korekcijama. Uporedi konačne nalaze sa C:\Kontroling\OUT\vrsta_svi_lokali\nalazi_vrsta.tsv. Ako evidencija ima kolonu nalazi_SHA256, proveri je prema stvarnom SHA-256 pripadajućeg nalaza. Provera prati trenutno usaglašeni par fajlova.
+Kolona merodavni_nalaz direktno se prenosi u value. Proveri da je jednaka konačnoj koloni nalaz. Kolona prvobitni_nalaz služi poređenju sa ranijim stanjem. Izvoz koristi već utvrđeni OCR nalaz prema postojećoj detekciji, uključujući merodavne anekse. Kolone excel_BK_za_ugovor, excel_BK_skup, ishod_za_ugovor i ishod_po_skupu_Z služe Excel verifikaciji i ne ulaze u value. Sačuvaj tekst, sve potvrđene delove i dijakritike. Kompletnu ekstrakciju ne ponavljaj radi izvoza.
+Za BK prenesi tačno "fixed", "variable" ili "both" kako je utvrđeno. "both" je jedna potvrđena vrednost. Ako detekcija nije mogla da utvrdi vrstu, prenesi tekst "NA". BK nema namerno praznu izlaznu vrednost. Ako je nalaz tehnički prazan, proveri pripadajući zapis i postojeću detekciju, pa koristi "NA" kada vrsta zaista nije utvrđena. Neslaganje izvora ili nepoznat kod prvo razreši. Uključi svaki ugovor bez obzira na primenljivost i ishod Excel verifikacije. Za neutvrđeni BK koristi isključivo tačan tekst "NA".
+
+4. Upis i ponovna provera
+Upiši UTF-8 JSON niz u redosledu registra. Svaki case_id se pojavljuje jednom. Svaki objekat ima tačno ključeve case_id, field i value, a sve tri vrednosti su stringovi. Koristi JSON serijalizator da pravilno kodira navodnike, obrnute kose crte i kontrolne znakove. Sačuvaj dijakritike u sadržaju.
+
+Validan primer:
+[
+  {"case_id":"Z0002-20220615-01","field":"Vrsta plaćanja","value":"fixed"}
+]
+
+Ponovo učitaj stvarno sačuvani fajl JSON parserom. Proveri da je vrh dokumenta niz. Proveri da broj objekata odgovara broju redova registra, da su case_id jedinstveni, da imaju jednak skup i isti redosled kao u registru, da svaki objekat ima tačno tri tražena ključa i da su sve vrednosti tekstualne. Proveri polje "Vrsta plaćanja" i podudarnost svakog value sa konačnim OCR nalazom za taj case_id. Odbaci JSON null, brojčane zamene i prazne BK vrednosti.
+Upis ograniči na vrsta_placanja.json pri izričito zatraženom izvozu. Registar, izvorne rezultate, uputstva, repo i fajlove drugih polja koristi samo za čitanje.
+
+5. Izveštaj
+Navedi punu putanju sačuvanog JSON fajla, broj proverenih zapisa, broj tačnih tekstualnih vrednosti "NA" i izvor završne evidencije. Broj namerno praznih BK vrednosti iznosi 0.

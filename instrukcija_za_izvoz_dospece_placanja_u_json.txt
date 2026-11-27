@@ -1,0 +1,23 @@
+Instrukcija za izvoz polja „Dospeće plaćanja” u JSON
+
+Ovu instrukciju primeni kada je izričito zatražen JSON izvoz već obrađenog polja. Podrazumevani izlaz osnovne obrade ostaje TSV. Detekcija BJ i Excel verifikacija primenjuju se prema svojim postojećim instrukcijama.
+
+1. Učitaj registar C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv kao autoritativan spisak ugovora i izvor redosleda. Preuzmi postojeći case_id kao tekst, bez renumeracije. Izbroj zapise i proveri jedinstvenost case_id u verziji registra koja se koristi za taj izvoz. Po potrebi zabeleži njen SHA-256 i ponovo ga proveri posle izvoza. Broj zapisa i hash prethodne serije služe za reviziju te serije. Dopunske zapise van registra izostavi.
+
+2. Učitaj poslednju završenu evidenciju C:\Kontroling\OUT\dospece_svi_lokali\evidencija_dospece.tsv, sa završnim korekcijama. Koristi UTF-8 čitač koji prihvata BOM i TSV parser. Za svaki case_id iz registra uporedi cost_center sa kolonom Z, a path_to_file sa kolonom osnovni_ocr. Putanje poredi po pravilima Windowsa, uz očuvanje originalnih vrednosti. Više ugovora sa istim cost_center ostaje više zasebnih zapisa. Ako postoji konačni OCR TSV C:\Kontroling\OUT\dospece_svi_lokali\nalazi_dospece.tsv iz iste obrade, uporedi kolonu nalaz za svaki case_id sa završnom evidencijom. Pri neslaganju utvrdi koja je verzija merodavna pre izvoza.
+
+3. Za šest poznatih ugovora bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Veži case_id za datum_osnovnog_ugovora i proveri da path_to_evidence odgovara koloni merodavni_ocr u završnoj evidenciji. Proveri citat prema rasponu redovi u stvarnom OCR dokumentu. Prazna putanja i sama Z oznaka ne identifikuju ugovor. Z0518-20151001-01 i Z0518-20240901-01 koriste isti dokument, uz različite datume i različite citirane redove. Ako bilo koja veza ostane dvosmislena, prijavi koordinatoru konkretne case_id, cost_center, kandidatske putanje i razlog neslaganja. Sačekaj razrešenje pre konačnog izvoza.
+
+4. U value prenesi konačni OCR kod iz kolone nalaz. Vrednosti advance i arrears prenesi doslovno, uz očuvanje svih potvrđenih delova vrednosti i dijakritika. Postojeći NA prenesi kao tekst "NA". Ako je nalaz prazan i vrednost nije utvrđena, upiši "NA". U ovom polju nema namerno prazne vrednosti. Nepoznatu nepraznu oznaku razjasni u evidenciji pre izvoza. Uključi svaki case_id bez obzira na primenljivost ili ishod Excel verifikacije. Ako za neki ugovor nema utvrđenog BJ koda, uključujući plaćanje za tekući period koje postojeća detekcija vodi kao NA, izvezi "NA". Polja prvobitni_nalaz, tip_nalaza, tekuci_period, datum_primene i citati ostaju u dokaznom TSV-u. Kolone ishod_svi_kandidati_Z i ishod_pouzdano_isti_ugovor i referentne Excel vrednosti ne koriste se za value. Ne ponavljaj ekstrakciju niti uvodi nova pravila detekcije.
+
+5. Tačan field je "Dospeće plaćanja". Ime izlaza je dospece_placanja.json. Puna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\dospece_placanja.json. Sačuvaj UTF-8 JSON niz redosledom registra, sa jednim objektom za svaki case_id. Svaki objekat ima tačno tri ključa case_id, field i value, sa tekstualnim vrednostima. Koristi JSON serijalizator za ispravno escape-ovanje navodnika, obrnutih kosih crta i kontrolnih znakova. Sačuvaj dijakritike u UTF-8. Za neutvrđene vrednosti koristi isključivo tekst "NA", bez JSON null, brojeva ili zamenskih oznaka.
+
+Primer strukture na dva postojeća zapisa:
+[
+  {"case_id": "Z0006-20200401-01", "field": "Dospeće plaćanja", "value": "arrears"},
+  {"case_id": "Z0023-20190315-01", "field": "Dospeće plaćanja", "value": "advance"}
+]
+
+6. Ponovo učitaj stvarno sačuvani JSON sa pune izlazne putanje. Proveri da je niz i da je broj objekata jednak broju zapisa u korišćenom registru. Proveri jedinstvenost case_id, jednak skup oznaka i potpuno isti redosled kao u registru. Proveri tačno tri propisana ključa, tekstualni tip svih vrednosti, doslovno isti field u svakom objektu i jednakost value sa pripremljenim mapiranjem. Uspešno parsiranje potvrđuje da je JSON sintaksa ispravna. Tokom izvoza upisuj samo svoj dodeljeni JSON. Registar, dokazni izvori, postojeće instrukcije, repozitorijum i tuđi izlazi služe samo za čitanje.
+
+7. Iz ponovo učitanog JSON-a prijavi punu putanju, broj zapisa, broj vrednosti koje su tačno tekst "NA" i putanju poslednje korišćene evidencije. Ako format polja ima namerno prazne tekstualne vrednosti, prijavi njihov broj zasebno. Za ovo polje taj broj mora biti nula.

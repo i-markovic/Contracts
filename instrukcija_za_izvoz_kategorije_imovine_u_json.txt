@@ -1,5 +1,63 @@
-Izvoz polja kategorija imovine u JSON
+Instrukcija za izvoz kategorije imovine u JSON
 
-Primeni ovu instrukciju kada je zatražena JSON predaja za ovaj entitet. Zajednička pravila formata i provere su u instrukcija_za_izvoz_polja_u_json.txt.
+Primena
 
-Ulaz je nalazi_kategorije_imovine.tsv. Vrednost preuzmi iz kolone nalaz. U ključ field upiši doslovno "kategorija imovine". Izlazni fajl nazovi kategorija_imovine.json.
+Ovu instrukciju primeni kada je izričito zatražen JSON izvoz postojećih nalaza. Podrazumevani izlaz osnovne obrade je TSV. Izvoz koristi već utvrđene nalaze i ne menja pravila identifikacije ni Excel validacije.
+
+1. Ulazi i redosled
+
+Autoritativni spisak i redosled ugovora daje registar:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+
+Poslednja finalna evidencija nalaza korišćena za izvoz:
+C:\Kontroling\OUT\kategorija_svi_lokali\evidencija_kategorije_imovine.tsv
+
+Prateća evidencija nezavisnog OCR izdvajanja pre Excel validacije:
+C:\Kontroling\OUT\kategorija_svi_lokali\nalazi_kategorije_imovine.tsv
+
+U finalnom TSV-u kolone case_id, Z i osnovni_ocr služe za povezivanje. Kolona nalaz sadrži konačnu vrednost, a kolone identitet_ugovora, dokazi_JSON i napomena služe za proveru izvora. Koristi poslednju potvrđenu verziju evidencije sa završenim korekcijama. Za navedene fajlove utvrđeno je da je kolona nalaz jednaka u finalnoj i pratećoj evidenciji. Ako se pojavi razlika, proveri koja je korekcija potvrđena. Nerešenu razliku prijavi sa konkretnim case_id.
+
+2. Povezivanje
+
+Obrađuj registar redom i preuzmi postojeći case_id kao tekst, bez prenumeracije. Za red sa osnovnim OCR-om potvrdi da cost_center odgovara koloni Z, da path_to_file odgovara koloni osnovni_ocr i da je case_id isti u registru i evidenciji. Proveri da je veza jednoznačna. Svaki ugovor ima svoj zapis i kada više ugovora deli isti cost_center.
+
+Šest redova sadašnjeg registra bez osnovnog OCR-a poveži preko case_id, datuma osnovnog ugovora i potvrdnog dokumenta i citata u fajlu:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+
+Proveri da se datum iz kolone datum_osnovnog_ugovora poklapa sa datumskim delom case_id. Poveži path_to_evidence sa dokazom u dokazi_JSON i proveri navedene redove i citat u izvoru. Prazan path_to_file ne koristi kao ključ. Sama Z šifra ne potvrđuje vezu. Ako ostane dvosmislenost, prijavi koordinatoru konkretne case_id, cost_center i sporne putanje ili dokaze. Sačekaj razrešenje pre konačnog izvoza.
+
+3. Prenos vrednosti
+
+Uključi svaki ugovor iz registra, bez obzira na primenljivost kategorije ili ishod Excel validacije. U value prenesi tekst iz kolone nalaz. Sačuvaj potvrđeni tekst u celosti, zajedno sa dijakriticima, razmacima i veličinom slova. Kolone ishod, excel_G_i_F_JSON i upotrebljive_kategorije_F_JSON služe validaciji i ne određuju value. Dopunska evidencija služi dokumentovanju ugovora van usaglašenog registra. U JSON ulaze samo case_id iz autoritativnog registra.
+
+Mapiranje iz kolone nalaz u value je doslovno:
+- Gaming facilities → "Gaming facilities"
+- Land and Building → "Land and Building"
+- Motor vehicles → "Motor vehicles"
+- NA → "NA"
+
+Prema postojećoj identifikaciji, NA označava slučaj u kojem kategorija nije utvrđena, uključujući nedostajući osnovni OCR, nedovoljno dokaza, više ravnopravnih kategorija ili nepostojanje odobrenog mapiranja. Šest slučajeva sa potvrdnim dokumentom i dalje nosi "NA" jer dokument potvrđuje identitet ugovora. Ovo polje nema namerno praznu vrednost. Ako je ćelija nalaz prazna, proveri evidenciju. Prenesi "NA" ako je potvrđeno da je kategorija neutvrđena. Ako nedostaje sam zapis ili je veza nejasna, prijavi case_id i razreši povezivanje pre izvoza. Sve vrednosti su tekst. Koristi tačno "NA" za neutvrđen nalaz, bez null, numeričkih oznaka ili zamene Excel vrednošću.
+
+4. Format i odredište
+
+Doslovna vrednost ključa field je "Kategorija imovine".
+Ime izlaza je kategorija_imovine.json.
+Puna izlazna putanja je:
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\kategorija_imovine.json
+
+Sačuvaj UTF-8 JSON niz u redosledu registra, sa tačno jednim objektom za svaki case_id. Objekat ima tačno tri ključa case_id, field i value, tim redom, sa tekstualnim vrednostima. Koristi JSON serijalizator koji pravilno obrađuje navodnike, obrnutu kosu crtu i kontrolne znakove i čuva dijakritike u UTF-8.
+
+Primer:
+[
+  {
+    "case_id": "Z0002-20220615-01",
+    "field": "Kategorija imovine",
+    "value": "Gaming facilities"
+  }
+]
+
+5. Provera predaje
+
+Ponovo učitaj stvarno sačuvan fajl UTF-8 JSON parserom. Potvrdi da je najviši nivo niz i da broj zapisa odgovara broju redova u registru koji se koristi za taj izvoz. Proveri jedinstvenost case_id, jednak skup i isti redosled kao u registru, odsustvo dodatnih ili dupliranih ključeva, tačno tri propisana ključa, tekstualne tipove i doslovni field u svakom objektu. Uporedi svaku ponovo učitanu vrednost sa potvrđenim nalazom za odgovarajući case_id. Pravilo obuhvata prati važeći registar. Broj zapisa i hash trenutne serije nisu trajni uslovi izvoza.
+
+Upiši samo JSON fajl ovog polja. Registar, izvornu evidenciju, postojeće instrukcije i druge fajlove koristi samo za čitanje. U završnom izveštaju navedi punu putanju, broj zapisa i broj vrednosti koje su tačno tekst "NA", kao i izvor evidencije. Prijavi provereni broj praznih vrednosti ako ih ima.

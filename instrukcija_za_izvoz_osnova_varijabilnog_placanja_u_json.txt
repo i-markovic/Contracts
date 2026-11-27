@@ -1,0 +1,40 @@
+Instrukcija za JSON izvoz — Osnova varijabilnog plaćanja (BT)
+
+1. Namena i odredište
+
+Ovu samostalnu instrukciju koristi za izričito zatražen izvoz završenog BT nalaza. Podrazumevani izlaz osnovne obrade ostaje TSV. Detekcija BT i Excel verifikacija koriste svoje postojeće instrukcije.
+
+Tačan field je "Osnova varijabilnog plaćanja".
+Ime izlaznog fajla je osnova_varijabilnog_placanja.json.
+Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\osnova_varijabilnog_placanja.json.
+
+2. Ulazi i povezivanje
+
+Autoritativan spisak i redosled ugovora preuzmi iz C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Učitaj case_id, cost_center i path_to_file kao tekst. Prepiši svaki postojeći case_id doslovno, bez renumeracije. Zadrži ugovore istog cost_center kao odvojene zapise.
+
+Koristi poslednju završenu evidenciju iz C:\Kontroling\OUT\osnova_varijabilne_svi_lokali\evidencija_osnova_varijabilne.tsv. Proveri da njena kolona nalazi_SHA256 odgovara stvarnom SHA-256 datoteke C:\Kontroling\OUT\osnova_varijabilne_svi_lokali\nalazi_osnova_varijabilne.tsv i završnom otisku u statistika.md iz istog foldera. Koristi aktuelni završni otisak i aktuelni broj ugovora iz registra za svaku seriju. Proveri da su završne korekcije i zavisnosti uključene. Uporedi kolonu BT_nalaz u evidenciji i nalazima po case_id.
+
+Poveži case_id iz registra sa istim case_id iz evidencije i potvrdi identitet preko cost_center iz registra i kolone Z iz evidencije. Za osnovni OCR uporedi apsolutnu putanju iz path_to_file s putanjom iz kolone osnovni_ocr razrešenom pod korenom C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026. Dozvoljeno je razrešiti razlike u separatorima putanje radi poređenja. Proveri osnovni_SHA256 kada je dostupan. Isti Z može imati više osnovnih ugovora. Prijavi koordinatoru konkretne case_id, cost_center, putanje i neusaglašene izvore ako povezivanje ostane dvosmisleno. Sačekaj razrešenje pre konačnog izvoza.
+
+Za šest ugovora bez osnovnog OCR-a u usvojenom registru upotrebi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Poveži postojeći case_id, datum_osnovnog_ugovora i path_to_evidence uz redovi i citat. Proveri da datum i citat identifikuju upravo taj ugovor i da putanja potvrdnog dokumenta odgovara BK_merodavni_ocr u evidenciji. Isti dokument može dokazivati dva ugovora različitih datuma. Sam Z ili prazan path_to_file ne služe kao ključ. Dopunske ugovore van registra izostavi.
+
+3. Mapiranje value
+
+Izvezi konačnu tekstualnu vrednost iz kolone BT_nalaz u evidenciji. Prenesi "index/rate", "performance" ili "both" doslovno kada je taj kod utvrđen. Razloge primenljivosti proveri u kolonama BK_zavrsni i BT_primenljivost. Sačuvaj sve potvrđene delove i dijakritike. Kolone Excel_BT_ishod, Excel_veza i Excel_veza_original služe proveri, dok value potiče iz BT_nalaz prema postojećoj detekciji.
+
+Uključi svaki case_id iz registra bez obzira na primenljivost i ishod Excel verifikacije. Upis "NA" obuhvata BK fixed, neutvrđeni BK, mehanizam van tri BT koda i nedovoljno dokazanu obaveznost mehanizma. Prazan BT nalaz bez utvrđenog koda izvezi kao tekst "NA". Kod ovog polja nema namernog praznog teksta. Koristi isključivo propisane tekstualne vrednosti, bez null, numeričke zamene, dopunskih oznaka ili nagađanja. Ako su BT_nalaz i njegova primenljivost u sukobu, prijavi konkretan case_id i sačekaj potvrdu ispravne evidencije pre izvoza.
+
+4. Upis i kontrola
+
+Upiši UTF-8 JSON niz, sa jednim objektom za svaki case_id, u tačnom redosledu iz registra. Svaki objekat ima tačno ključeve case_id, field i value. Sve vrednosti su tekst. Za serijalizaciju koristi JSON biblioteku koja pravilno kodira navodnike, obrnute kose crte i kontrolne znake. Sačuvaj dijakritike u UTF-8. Menjaj samo dodeljeni izlazni JSON.
+
+Validan primer strukture
+
+[
+  {"case_id": "Z0002-20220615-01", "field": "Osnova varijabilnog plaćanja", "value": "NA"},
+  {"case_id": "Z0006-20220601-01", "field": "Osnova varijabilnog plaćanja", "value": "index/rate"}
+]
+
+Ponovo učitaj stvarno sačuvani fajl JSON parserom i potvrdi da je broj objekata jednak broju zapisa u aktuelnom registru. Proveri jedinstvenost i potpuno isti skup i redosled case_id, tačno tri propisana ključa, tekstualne tipove, tačan naziv field i jednakost value sa mapiranim BT nalazom za svaki zapis. Proveri da registar, evidencija, prethodne instrukcije i tuđi fajlovi ostaju bez izmena.
+
+U završnom izveštaju navedi punu izlaznu putanju, izvor evidencije, ukupan broj zapisa i broj vrednosti tačno jednakih tekstu "NA". Namerno prazne vrednosti prijavi odvojeno ako postoje. Očekivani broj namerno praznih BT vrednosti je nula.

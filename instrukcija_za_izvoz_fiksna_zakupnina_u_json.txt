@@ -1,0 +1,48 @@
+Izvoz polja Fiksna zakupnina (BQ) u JSON
+
+1. Obuhvat i izlaz
+
+Ovu zasebnu instrukciju primeni kada je JSON izvoz izričito zatražen. Osnovna obrada i dalje daje TSV. Detekcija zakupnine i Excel verifikacija imaju svoja uputstva.
+
+Tačna vrednost ključa field je "Fiksna zakupnina".
+Ime izlaznog fajla je fiksna_zakupnina.json.
+Puna izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\fiksna_zakupnina.json.
+
+2. Registar i povezivanje
+
+Kao autoritativan spisak ugovora i njihov redosled koristi C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Učitaj ga kao CSV u UTF-8 i sačuvaj svaki postojeći case_id kao tekst, bez renumeracije. Zadrži svaki ugovor odvojeno, uključujući više ugovora za isti cost_center. U izvoz ulaze isključivo ugovori iz registra. Broj zapisa utvrdi pri svakom izvozu iz registra.
+
+Poveži cost_center iz registra sa Z iz evidencije i path_to_file iz registra sa osnovni_OCR iz evidencije. Za proveru putanje dozvoljena je normalizacija Windows separatora, relativnih segmenata i veličine slova. Uskladi case_id na oba izvora. Ako nedostaje veza, postoji više kandidata ili se case_id, Z ili putanja međusobno razilaze, prijavi koordinatoru konkretne case_id, cost_center, putanje i kandidate. Sačekaj razrešenje pre konačnog izvoza.
+
+Za šest redova trenutnog registra bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Poveži case_id, datum_osnovnog_ugovora, path_to_evidence, redovi i citat sa registarskom Z oznakom i ugovorom iz postojećeg nalaza. Proveri datum i potvrdu u navedenom OCR opsegu. Kod dva ugovora Z0518 koji dele isti potvrđujući OCR razlikuj datume i odredbe. Prazan path_to_file i sama Z oznaka nisu jedinstveni ključevi. Povezivanje ovih redova ne menja već utvrđenu BQ vrednost.
+
+3. Izvor i mapiranje vrednosti
+
+Koristi najnoviju završenu evidenciju C:\Kontroling\OUT\fiksna_zakupnina_svi_lokali\evidencija_fiksna_zakupnina.tsv. Sa njom uskladi C:\Kontroling\OUT\fiksna_zakupnina_svi_lokali\nalazi_fiksna_zakupnina.tsv, kroz case_id, Z, osnovni_OCR, BK, OCR_ishod i par BQ_OCR (evidencija) / BQ (nalazi). Proveri status i verziju prema statistika.md u istom folderu, uključujući završne korekcije i obnovljene zavisnosti. Pri svakom izvozu koristi aktuelnu potvrđenu verziju, sa brojem redova i kontrolnim sumama te serije kada su dokumentovane.
+
+Izvezi konačan dokumentarni nalaz iz kolone BQ_OCR. Kolone BQ_primenljivost, OCR_ishod i BK služe da potvrde kako je nalaz označen. Kolone Excel_ishod i BQ_Excel_original pripadaju Excel verifikaciji. Ugovoreni_iznos, racun i OCR_faze_uslovi mogu pomoći proveri konteksta. U value ide zaključeni iznos iz BQ_OCR, tako da se ne prenosi nominalni, uslovni ili Excel iznos kao zamena i ne ponavlja preračun poreza ili zaokruživanje.
+
+Ako je BQ_primenljivost DA, OCR_ishod UTVRĐEN i BQ_OCR sadrži potvrđen iznos, sačuvaj iznos kao tekst tačno kako je zapisan u BQ_OCR, uključujući decimalnu tačku i dve decimale. Dodaj razmak, valutu tačno iz valuta_OCR, zatim " / " i period prema koloni BI:
+- monthly daje "mesec".
+- annual daje "godina".
+- other daje "ugovoreni period YYYY-MM-DD–YYYY-MM-DD" kada su obe granice potvrđene u OCR_primena, kao u usvojenom izvozu. Prepiši te datume bez konverzije u mesečnu stopu. Ako nedostaje bilo koja granica ili se potvrđena vrednost ne može predstaviti ovim mapiranjem, prijavi konkretan slučaj radi razrešenja pre izvoza.
+
+Ako je konačni BQ_OCR "NA" ili nema potvrđenog iznosa, upiši tačan tekst "NA". Ovo važi i za BK=variable, BK=NA, BQ_primenljivost NE ili NEUTVRĐENA i primenljive slučajeve sa neutvrđenim iznosom. U ovom polju nema namerno praznog value. Prazan BQ_OCR sa neutvrđenim ishodom mapira se na "NA". Kontradikciju, kao što su OCR_ishod UTVRĐEN uz prazan BQ_OCR ili brojčani BQ_OCR bez potvrđene valute, prijavi pre izvoza. Sačuvaj potvrđeni iznos, valutu, period i njegove potvrđene granice gde se primenjuju. Vrednosti null, JSON brojevi i zamenske nule se ne koriste.
+
+4. JSON zapis
+
+Sačuvaj UTF-8 JSON niz bez BOM-a, redosledom iz registra. Svaki case_id ima tačno jedan objekat sa tačno tri ključa case_id, field i value. Sve tri vrednosti piši kao tekst. Koristi standardnu JSON serijalizaciju za pravilno escape-ovanje navodnika, obrnutih kosih crta i kontrolnih znakova i za direktan zapis dijakritika.
+
+Validni primeri iz prethodnog izvoza:
+[
+  {"case_id": "Z0002-20220615-01", "field": "Fiksna zakupnina", "value": "588.93 EUR / mesec"},
+  {"case_id": "Z0210-20240701-01", "field": "Fiksna zakupnina", "value": "10000.00 RSD / ugovoreni period 2024-07-01–2025-10-31"},
+  {"case_id": "Z0387-20250601-01", "field": "Fiksna zakupnina", "value": "NA"},
+  {"case_id": "Z0474-20230801-01", "field": "Fiksna zakupnina", "value": "5889.28 EUR / godina"}
+]
+
+5. Provera i predaja
+
+Ponovo otvori stvarno sačuvani fiksna_zakupnina.json i parsiraj ga kao UTF-8 JSON. Proveri da je korenski tip niz i da je broj zapisa jednak broju redova aktuelnog registra. Potvrdi jedinstvenost i tačnu jednakost skupa i redosleda case_id, tačno tri propisana ključa, tekstualne tipove, identičan field i tačno mapirane value. Proveri da serijalizacija i ponovno učitavanje daju iste znakove, uključujući dijakritike i pravilno escape-ovane znakove.
+
+Vrati punu putanju izlaza, broj zapisa, broj vrednosti koje su tačno "NA" i putanju korišćene završne evidencije. Navedi broj namernih praznih vrednosti ako postoje. Za Fiksnu zakupninu očekivani broj namernih praznih vrednosti je nula. Izvoz upisuje samo dodeljeni JSON fajl. Registar, postojeće instrukcije, evidencije, tuđi fajlovi i repo ostaju neizmenjeni.

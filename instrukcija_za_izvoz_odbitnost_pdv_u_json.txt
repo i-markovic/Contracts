@@ -1,0 +1,41 @@
+Izvoz polja Odbitnost PDV-a u JSON
+
+Ovu instrukciju primeni kada je JSON izvoz izričito zatražen. Podrazumevani izlaz osnovne obrade je TSV. Pravila detekcije BN i Excel verifikacije ostaju ona iz postojećih instrukcija.
+
+1. Izvori i cilj
+   Field: Odbitnost PDV-a
+   Ime fajla: odbitnost_pdv.json
+   Izlaz: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\odbitnost_pdv.json
+   Autoritativni spisak i redosled: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+   Poslednja evidencija korišćena za ovo polje: C:\Kontroling\OUT\pdv_svi_lokali\evidencija_pdv.tsv
+
+   Koristi poslednju završenu verziju evidencije, uključujući završne korekcije. Ako se izvor osveži, proveri aktuelni registar i evidenciju. Broj redova i SHA-256 konkretne serije služe za kontrolu te serije. Ne koristi ih kao trajni uslov izvoza.
+
+2. Povezivanje ugovora
+   Čitaj CSV redom i zadrži postojeći case_id kao tekst, bez renumeracije. Proveri da je isti case_id jedinstven u registru i evidenciji. Za red sa osnovnim OCR-om proveri cost_center iz registra prema Z u evidenciji, a path_to_file prema osnovni_OCR. Za poređenje smeš normalizovati Windows putanju, uključujući velika i mala slova. Više ugovora istog troškovnog mesta zadrži odvojeno. Dopunske stavke van registra izostavi.
+
+   Za šest ugovora u odobrenoj seriji sa praznim path_to_file koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Poveži po case_id i cost_center, proveri datum_osnovnog_ugovora, pa path_to_evidence uporedi sa dokaz_OCR u evidenciji. Proveri datum i citat u naznačenim OCR redovima iz kolona redovi i citat. Isti aneks kod Z0518 upućuje na dva različita ugovora. Za svaki proveri njegov case_id, datum i zaseban citat. Prazna putanja ili sam Z nisu dovoljan ključ.
+
+   Ako veza izostane ili ostane dvosmislena, prijavi koordinatoru konkretne case_id, putanje i sukob kandidata. Sačekaj razrešenje pre konačnog upisa. Utvrdi vezu pre prenosa vrednosti NA.
+
+3. Mapiranje vrednosti
+   Za svaki povezani ugovor preuzmi konačni BN_nalaz iz evidencija_pdv.tsv u value. Kolone primenljivost_PDV, odbitnost, razlog i dokaz_OCR daju kontekst nalaza. Kolone BN_original_svi_Z, BN_original_pouzdano, poredjenje_nivo_Z i poredjenje_isti_ugovor služe Excel proveri. Vrednost potiče iz dokumentovanog BN_nalaz, nezavisno od Excel ishoda.
+
+   • Konačno yes prenesi kao "yes". U postojećoj detekciji to obuhvata dokazanu potpunu odbitnost i dokazanu neprimenljivost PDV prema definiciji obrasca.
+   • Konačno no prenesi kao "no" kada evidencija potvrđuje delimičnu odbitnost ili neodbitnost. Napomena za BP ostaje u evidenciji.
+   • Tekst "NA" upiši kad konačan ishod nije utvrđen. Prazno BN_nalaz proveri prema završnoj evidenciji. Ako označava neutvrđen ishod, izvezi "NA". Za BN nema namerne prazne vrednosti. Ako je praznina greška ili je kod van očekivanih yes, no i NA, razreši zapis pre izvoza. Ne koristi null, broj, logičku vrednost ili proizvoljnu zamenu.
+
+   Uključi svaki ugovor iz registra bez obzira na primenljivost i Excel ishod. Prenesi potvrđenu vrednost u celosti uz očuvanje dijakritike.
+
+4. Format i provera
+   Koristi JSON serijalizator za pravilno escape-ovanje navodnika, obrnutih kosih crta i kontrolnih znakova. Sačuvaj UTF-8 JSON niz po redosledu registra, sa tačno jednim objektom za svaki case_id. Svaki objekat ima tačno ključeve case_id, field i value. Sve tri vrednosti su tekst.
+
+   Primer:
+   [
+     {"case_id":"Z0002-20220615-01","field":"Odbitnost PDV-a","value":"NA"},
+     {"case_id":"Z0204-20230201-01","field":"Odbitnost PDV-a","value":"yes"}
+   ]
+
+   Ponovo učitaj stvarno sačuvani fajl kao UTF-8 JSON. Proveri da broj objekata odgovara broju zapisa u aktuelnom registru, da je svaki case_id jedinstven, da su skup i redosled isti kao u registru i da svaki objekat ima tačno tri propisana ključa sa tekstualnim vrednostima. Proveri field u svakom objektu i uporedi učitani value sa vrednošću pripremljenom iz BN_nalaz.
+
+   Pri odobrenom izvozu upiši samo dodeljeni odbitnost_pdv.json. Registar, izvori, postojeće instrukcije, repozitorijum i fajlovi drugih polja služe kao izvori za čitanje. U završnom izveštaju navedi punu putanju JSON-a, putanju korišćene evidencije, broj zapisa, broj tačnih tekstualnih "NA" i broj namernih praznih vrednosti ako postoje.

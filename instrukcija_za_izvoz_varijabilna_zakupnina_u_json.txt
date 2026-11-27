@@ -1,0 +1,42 @@
+Izvoz polja Varijabilna zakupnina (BU) u JSON
+
+Ovu samostalnu instrukciju primeni kada je izričito zatražen JSON izvoz već obrađenog polja. Podrazumevani izlaz osnovne obrade ostaje TSV. Za izvoz koristi završne nalaze detekcije i postojeću Excel verifikaciju kao kontrolni trag.
+
+1. Odredi ulaze i izlaz
+
+Naziv polja je tačno Varijabilna zakupnina. Ime izlaznog fajla je varijabilna_zakupnina.json.
+Izlazna putanja je C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\varijabilna_zakupnina.json.
+Autoritativni spisak i redosled ugovora daje C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv. Za svako izvršavanje očitaj važeću odobrenu verziju registra i broj njenih zapisa. Ako je za konkretno izvršavanje objavljen SHA-256, proveri ga. Otiske ulaza možeš evidentirati u završnom izveštaju.
+
+U folderu C:\Kontroling\OUT\varijabilni_iznos_svi_lokali koristi najnoviji završni nalazi_varijabilni_iznos.tsv, uz pripadajuće evidencija_varijabilni_iznos.tsv i statistika.md iz istog završenog ciklusa. Proveri da ta verzija uključuje sve završne korekcije i dopune zavisnog OCR BT nalaza.
+
+2. Poveži svaki zapis iz registra sa nalazom
+
+Preuzmi postojeći case_id kao tekst, u izvornom redosledu i bez renumeracije. Proveri da su case_id vrednosti jedinstvene. Poveži cost_center iz registra sa Z u oba TSV-a. Proveri path_to_file iz registra prema kolonama osnovni_registar i osnovni_ili_povezani_ocr u OCR nalazu, uz podudaranje case_id. Za poređenje Windows putanja koristi normalizovane separatore i veličinu slova. Zadrži kao odvojene zapise sve ugovore koji dele istu Z šifru, kao i različite verzije koje imaju sopstveni case_id.
+
+Za šest ugovora bez osnovnog OCR-a koristi C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv. Spoji po case_id i proveri cost_center, datum_osnovnog_ugovora, path_to_evidence, redovi i citat. Putanja dokaznog akta treba da odgovara koloni osnovni_ili_povezani_ocr. Dve stavke mogu imati isti dokazni akt, pa proveri datum i konkretan citat za svaku stavku. Kod praznog path_to_file identitet potvrđuje ovaj dokazni spoj.
+
+Ako veza nije jednoznačna ili nedostaje jedan od traženih dokaza, prijavi koordinatoru konkretan case_id, cost_center, putanju ili vrednosti koje se razlikuju i sačekaj razrešenje pre konačnog izvoza.
+
+3. Prenesi završnu BU vrednost
+
+Za svaki zapis postavi case_id iz registra, field kao tačan tekst Varijabilna zakupnina i value iz kolone BU u nalazi_varijabilni_iznos.tsv. U evidencija_varijabilni_iznos.tsv proveri da za isti case_id odgovaraju Z, BU, BU_status i primenljivost_BU. Izvor za value ostaje završni OCR nalaz prema postojećoj instrukciji za detekciju. Excel vrednosti i ishodi poklapanja služe za verifikaciju.
+
+Kad je BU_status POTVRDJEN_IZNOS, kopiraj ceo tekst iz BU, uključujući decimalnu tačku i završne nule. U JSON-u ga sačuvaj kao tekst. Kolone valuta, BI, osnovica_ugovor, osnovica_po_C24, poslednja_potvrdjena_indeksirana_rata_pre_C24 i racun_BU daju kontekst. U value se prenosi samo sadržaj kolone BU. Sačuvaj sve potvrđene delove iz te kolone i sve dijakritike. Koristi već izračunat BU bez ponavljanja preračuna, poreza ili zaokruživanja tokom izvoza.
+
+Uključi svaki ugovor iz registra bez obzira na primenljivost i Excel ishod. Za izuzete slučajeve (npr. fixed, performance ili BT NA) finalni BU je "NA". Kod primenljivog index/rate ili both prenesi "NA" kada je tekući iznos neutvrđen, uključujući fiksnu fazu, nedostajuću realizaciju ili naredni obračun i istorijsku verziju bez tekuće indeksirane rate. Ovo polje nema namerne prazne vrednosti. Prazan BU kod potvrđeno neutvrđenog ishoda izvezi kao "NA". Ako je BU prazan uz status potvrđenog iznosa ili se BU i status ne slažu, razreši protivrečnost u završnim nalazima pre izvoza. Tekst "NA" je različit od nule. Koristi tekstualne vrednosti, bez null, JSON brojeva i proizvoljnih zamena.
+
+4. Sačuvaj i proveri JSON
+
+Serijalizuj UTF-8 JSON niz standardnom JSON bibliotekom radi pravilnog escape-ovanja navodnika, obrnutih kosih crta i kontrolnih znakova. Sačuvaj dijakritike. Redosled objekata mora biti isti kao u registru. Svaki case_id ima jedan objekat, sa tačno tri ključa case_id, field i value. Sve tri vrednosti moraju biti tekst.
+
+Primer validnog isečka niza
+
+[
+  {"case_id":"Z0043-20191101-01","field":"Varijabilna zakupnina","value":"1040.22"},
+  {"case_id":"Z0046-20260101-01","field":"Varijabilna zakupnina","value":"NA"}
+]
+
+Upiši samo dodeljeni JSON. Registar, nalaze, prethodne instrukcije, druge izlaze i repo koristi bez izmena. Ponovo učitaj stvarno sačuvani JSON i proveri da je niz, da broj objekata odgovara broju zapisa važećeg registra i da su case_id vrednosti jedinstvene, sa jednakim skupom i istim redosledom kao u registru. Proveri tačne ključeve, sve tekstualne tipove, tačan field u svakom objektu i jednakost value sa završnom kolonom BU prema pravilima iznad.
+
+U završnom izveštaju navedi punu putanju JSON-a, broj zapisa, broj vrednosti koje su tačno tekst "NA" i korišćenu verziju BU nalaza. Broj namernih praznih vrednosti za BU je nula.
