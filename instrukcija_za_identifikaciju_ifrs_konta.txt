@@ -1,0 +1,34 @@
+SAMOSTALNA INSTRUKCIJA: IDENTIFIKACIJA IFRS KONTA (CM), SVE THIRD PARTY
+
+MERODAVNO PRAVILO
+Korisnik je izričito odredio: „tretiraj sve kao third party. korisnici će sami ispraviti gde misle da treba na finalnom setu“.
+Ovo zamenjuje raniji uslov dokazivanja IC/third party odnosa. Za SVE ugovore, fizička i pravna lica, više ili nepoznate zakupodavce, odnos je third party kao KORISNIČKI DEFAULT. To nije dokaz poslovne nezavisnosti niti pravna/poreska tvrdnja. Obavezna provenijencija: status_odnosa=third party; osnov_odnosa=korisnicko_pravilo_za_sve; IC_status=IC_status_nije_proveravan_za_izbor_konta. Ne traži registar grupe i ne vodi NA zbog IC statusa. Korisnik može kasnije ručno ispraviti IC u finalnom setu; automatski izvoz pod ovim pravilom ne menja konta u IC varijante.
+AKTIVNO MAPIRANJE
+741721 — shop / Gaming facilities, third party.
+741621 — ostale zgrade/prostori, uključujući stanove, parking i sličan dokazan predmet, third party.
+741821 — vozila, third party.
+NA — dokumentarno neutvrđena vrsta ili nerazrešeno mapiranje/multiple grupe predmeta.
+Preostale varijante celog korisničkog šifrarnika su 741722 (shop, IC), 741622 (ostale zgrade/prostori, IC), 741822 (vozila, IC). One se NE biraju i NE izvoze automatski pod sadašnjim pravilom.
+IZVORI I GRANICE
+Autoritativan registar: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+Primarni OCR: C:\Kontroling\IFRS\ugovori\UPLATNA MESTA.2026
+Potvrde praznog osnovnog OCR-a: C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+Kandidatska kategorija: poslednja završena evidencija/nalazi u C:\Kontroling\OUT\kategorija_svi_lokali, odnosno novija potvrđena revizija tog polja.
+Kandidat zakupodavca: C:\Kontroling\OUT\zakupodavac\evidencija.tsv; nije izvor IC statusa niti zamena za telo ugovora.
+Excel: C:\Kontroling\ZBet IFRS16Contracts 23102026 i Najbitniji elementi ugovora za kalkulaciju (Opis).xlsx
+Merodavan detaljni zahtev sadašnje serije: C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\zahtev_CM_ceo_skup.txt
+Izlazna evidencija i instrukcije: C:\Kontroling\OUT\ifrs_konto_svi_lokali
+Obuhvat i redosled uvek izvedi iz važećeg registra; trenutna kontrola je 600 case_id iz 376 Z lokala. Broj 600 je kontrola sadašnje serije, ne trajno fiksiran obuhvat. Zadrži postojeće case_id i vodeće nule Z, uključujući UNDATED. Datum ispravljen u dokumentu ne menja oznaku. Dokumenti drugih foldera mogu biti dokaz pouzdane veze, ne novi ugovori glavnog skupa.
+Ranije 21 obrade, istorijski CM pilot, registar, OCR i referentni Excel ostaju samo za čitanje. Repo/push vodi koordinator. Produkcioni CM JSON je izričito odobren kao poseban izlaz, prema trećoj instrukciji. Bez web/BI upita i opštih pravnih ili poreskih pravila za ovo zatvoreno mapiranje.
+
+POSTUPAK
+1. Pročitaj definiciju u prvom Excel listu Najbitniji elementi ugovora!A27:C27 i korisnički srpski šifrarnik. Srpsko tumačenje i novo pravilo sve third party su merodavni. Pre detekcije ne čitaj contract-entries CM ni njegove izvoze. Ako je raniji pilot već video CM, zabeleži to pošteno; novi puni nalaz mora biti nezavisno izveden i zamrznut pre nove pune Excel verifikacije.
+2. Za svaki red registra potvrdi case_id, cost_center/Z i path_to_file. Kandidatsku vrstu, izvor i citate proveri prema stvarnom OCR-u, sa istom oznakom i ugovorom. Ne koristi staru kategoriju kao konačan dokaz bez izvornog citata. Ako su OCR redovi pomereni ili sadržaj revidiran, izvuci novi veran citat i nove redove, uz audit prethodnog lokatora. Ne prepisuj izvornu kategoriju drugih projekata.
+3. Čitaj telo osnovnog ugovora, pouzdano vezane anekse i konkretne operativne potvrde. Aneks zahteva referencu osnovnog broja/datuma uz stranke, predmet i odgovarajuću hronologiju. Novi ugovor, stari/novi zakupodavac, drugi predmet ili isti Z nisu automatski isti lanac. Evidentiraj isključene kandidate i stvarne reference. Statusno sledbeništvo može dokazati identitet stranke; samo po sebi ne dokazuje namenu prostora.
+4. Za šest sadašnjih redova sa praznim path_to_file ne izostavljaj case_id. U pomoćnom CSV-u potvrdi path_to_evidence, osnovni datum, redove i citat za isti ugovor. Dva Z0518 zapisa razlikuj po osnovnim datumima 01.10.2015. i 01.09.2024. Prazan osnovni OCR sam po sebi ne mora dati NA ako pouzdano vezani aneks izričito dokazuje vrstu za svoj period. Ne prenosi namenu aneksa unazad na nedokazan istorijski period.
+5. Utvrdi vrstu po ugovorenom predmetu i nameni. Shop u stambenoj zgradi je shop. Ne klasifikuj po nazivu foldera ili Excel CM. Zaseban deo fasade za reklamu mapiraj u ostale zgrade/prostore samo uz izričit dokaz da je predmet deo zgrade; čuvaj tu derivaciju. Bilbord, oprema, automati i mešoviti predmeti ne postaju vozila ili shop zbog Z. Ako različite grupe nisu pouzdano podređene jednoj funkcionalnoj celini, ne forsiraj jedan konto: NA uz dokazane delove i preostale kandidate.
+6. Odnos dodeli po korisničkom defaultu za svaki ugovor, bez dokazivanja IC statusa. Izvedi konto iz potvrđene vrste i šifrarnika. Ako vrsta ostaje neodređena, vrednost je tekst NA. Kod potvrđenog prostora/zgrade, ali nepoznate grupe shop/ostali prostor, kandidati su 741721/741621; 741821 nije kandidat za dokumentovanu zgradu.
+7. Svaki dokaz čuva naziv dokumenta, apsolutnu i relativnu izvornu putanju, SHA256, član/stranu ili 1-based TXT redove, veran citat, vezu i period verzije. Odvoji činjenicu iz OCR-a, zaključak mapiranja i korisnički default. Proveri SVE NA vrste i odstupanja u stvarnom izvoru. Potvrđene pilot vrste/citate smeš preneti posle provere izvora, ali odnos i konto ponovo izvedi novim pravilom. Istorijski pilot ne menjaj.
+8. Sačuvaj UTF-8 nalazi_ifrs_konto.tsv sa zaglavljem i jednim fizičkim redom po case_id, redom registra. Najmanje kolone: case_id, Z, path_to_file, putanja_dokaza_identiteta, vrsta_imovine, potvrdjeni_delovi, status_odnosa, osnov_odnosa, IC_status, nalaz, derivacija, razlog_NA, kandidatska_konta_JSON, verzija_period, dokazi_JSON, aneksi_JSON i hash izvora. Višeredne citate i ćelije sačuvaj u JSON poljima sa escape novim redovima; ne razbijaj fizički TSV zapis. Podrazumevani izlaz je TSV.
+9. Ponovo učitaj TSV, proveri ceo skup, jedinstvenost/redosled, postojeće putanje, sve citate/hash i dozvoljene vrednosti. Sačuvaj UTC vreme i SHA256 nalaza/registra PRE nove pune contract-entries verifikacije. Za sadašnju seriju očekuje se 601 fizički red sa zaglavljem. Kasnija konkretna ispravka zahteva originalni snapshot, novi hash/vreme i razlog; nikada ne prikazuj kasniju verziju kao pre-Excel nalaz. Nalaze ne menjaj radi Excel poklapanja.
+10. Statistika odvaja uspeh vrste od primene defaulta: 600/600 primenjen third party nije 600 dokaza nezavisnosti. Identifikacija je nalaz!=NA / ukupan broj. Prikaži sva tri aktivna konta, tri neaktivne IC varijante i NA, periode i ograničenja. Imenilac 0 je neizračunljivo. Excel poređenje i JSON su zasebni naredni koraci.

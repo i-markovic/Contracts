@@ -1,0 +1,26 @@
+SAMOSTALNA INSTRUKCIJA: PRODUKCIONI JSON IZVOZ IFRS KONTA, SVE THIRD PARTY
+JSON izvoz je za sadašnji ceo skup izričito zatražen. Osnovni format obrade ostaje TSV; detekcija i Excel verifikacija su odvojene. Ova instrukcija je samostalna i zamenjuje stari IC-uslov prethodnog pilota za novi puni skup.
+MERODAVNO PRAVILO I VREDNOSTI
+SVE ugovore tretiraj kao third party po korisničkom defaultu, a ne po dokazu nezavisnosti. Izvorna provenijencija mora glasiti status_odnosa=third party, osnov_odnosa=korisnicko_pravilo_za_sve, IC_status=IC_status_nije_proveravan_za_izbor_konta. Ne traži registar grupe. Aktivni tekstualni konti su 741721 (shop/gaming), 741621 (ostale zgrade/prostori), 741821 (vozila), odnosno "NA" za dokumentarno neutvrđenu vrstu/mapiranje. Nepoznat IC status nije NA razlog. IC varijante celog šifrarnika 741722/741622/741822 ne izvoze se automatski pod ovim pravilom. Korisnik ih može kasnije ručno ispraviti u finalnom setu.
+AUTORITATIVNI REGISTAR I IZVOR NALAZA
+Registar: C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\registar_osnovnih_ugovora.csv
+Poslednja ZAVRŠENA puna IFRS evidencija: C:\Kontroling\OUT\ifrs_konto_svi_lokali\evidencija_ifrs_konto.tsv, izvorna kolona TACNO nalaz, usaglašena sa nalazi_ifrs_konto.tsv i istorijom verzija/završnom kontrolom. Ne biraj izvor samo po vremenu fajla. Čitaj poslednju završenu verziju; ne vraćaj staro pilot IC pravilo.
+Uvek ponovo učitaj važeći registar, sačuvaj SHA256, postojeće oznake i redosled. Trenutni ceo skup ima 600 zapisa iz 376 Z foldera; ovo je kontrola sadašnje serije, a produkcioni broj je dinamičan prema registru. Nemoj trajno hardkodovati 600 niti menjati UNDATED/case_id zbog kasnije ispravljenog datuma.
+POVEZIVANJE
+Poveži svaki case_id sa cost_center/Z i path_to_file/putanjom izvora iz registra. Sačuvaj originale, a normalizuj samo kopije za poređenje putanja na Windows-u. Z nije samostalan ključ kada ima više ugovora. Duplikate, neslaganje izvora, više kandidata ili neusaglašene verzije razreši dokumentarnim brojem/datumom/strankama/predmetom pre konačnog upisa. Ako identitet ostane dvosmislen, prijavi konkretne sporne zapise i zaustavi konačan izvoz, bez izmišljanja. Ako je identitet pouzdan, ali vrsta nije dokazana, vrednost ostaje NA i ugovor se uključuje.
+Za šest sadašnjih praznih path_to_file učitaj:
+C:\Kontroling\OUT\registar_osnovnih_ugovora_provera\dokazi_ugovora_bez_osnovnog_OCR.csv
+Trenutne potvrde: Z0255-20200305-01; Z0374-20151121-01; Z0379-20200601-01; Z0447-20160201-01; Z0518-20151001-01; Z0518-20240901-01.
+Za svaku proveri case_id, Z/folder, path_to_evidence, osnovni datum, redove/citat i SHA256 stvarnog izvora. Dva Z0518 zapisa dele akt, ali imaju različite osnovne datume i predmete: ne spajaj ih. Potvrda identiteta ne daje automatski konto; nalaz uzmi iz završene IFRS evidencije. Prazan osnovni OCR nije razlog za izostavljanje ili novu oznaku.
+POTPUNOST I SHEMA
+Uključi SVE case_id iz registra bez obzira na Excel ishod, odsustvo veze, nepoklapanje ili prazan CM. Ne koristi Excel da popuniš ili zameniš nalaz. Ako završena evidencija nema tačno ceo skup ili sadrži višak/duplikate, ne objavljuj nepotpun produkcioni JSON.
+UTF-8 JSON NIZ sa jednim objektom po case_id u redosledu registra. Tačno tri ključa: case_id, field, value. Sve tri vrednosti moraju biti tekst. Field je TACNO "IFRS konto". Value je jedan od tekstova "741721", "741621", "741821", "NA". Bez null, brojeva, dodatnih ključeva ili namerno praznih vrednosti; očekivani broj namerno praznih je 0. Čuvaj dijakritike (ensure_ascii=False).
+Primer celog JSON niza (ilustracija sheme; stvarni izvoz obuhvata ceo važeći registar):
+[
+  {"case_id":"Z0002-20220615-01","field":"IFRS konto","value":"741721"}
+]
+PRODUKCIONI IZLAZ
+C:\Kontroling\IFRS\IFRS web aplikacija\extracted_data\ifrs_konto.json
+Izvoz sada pripremi za ceo važeći registar, ne za samo pilot. Istorijski pilot i njegov ifrs_konto_pilot.json u C:\Kontroling\OUT\ifrs_konto_Z0002-Z0047 ne prepisuj. Ne menjaj druge 21 obrade, Excel, OCR ili registar; repo/push vodi koordinator.
+VALIDACIJA I PREDAJA
+Pre pisanja proveri kompletan skup i redosled, jedinstvenost, registarske veze, izvorni nalaz i aktivni šifrarnik. Posle pisanja ponovo učitaj JSON SA DISKA i proveri: niz; broj jednak važećem registru (sada 600); identičan redosled case_id; jedinstvenost; tačno tri ključa; sva tri podatka tekst; field=="IFRS konto"; value iz aktivnog skupa i identičan koloni nalaz za svaki case_id; broj NA i broj namerno praznih. Sačuvaj SHA256 registra/evidencije/JSON-a i stvarno vreme izvoza. Vrati punu izlaznu putanju, broj zapisa, NA, namerno prazne=0 i PASS/konkretne greške. Za sadašnji rezultat brojeve izračunaj iz datoteke; ne koristi očekivani broj kao zamenu za proveru.
